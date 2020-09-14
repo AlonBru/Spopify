@@ -1,13 +1,17 @@
 import React , {useState} from 'react';
 import axios from 'axios';
 
-function CheckArtist({addData}) {
+function CheckArtist({addData,album=false}) {
+    
     const [check,setCheck]= useState()
+    
     const checkFK = (e) => {
         const event = {...e}
         const query = event.target.value
         if(query===''){
             setCheck()
+            addData({name:'artist',value:undefined})
+
             return
         }
         axios.get(`/artist/${query}`)
@@ -18,22 +22,27 @@ function CheckArtist({addData}) {
                 case 0:
                     checkResult='search found no artists' 
                     break;
-                    default:
-                        checkResult=`search found ${data.length} artists: \n- `+
-                        data.map(artist=>`${artist.name} id: ${artist.artist_id}`).join('\n- ') 
+                case 1:
+                    const artist = data[0]
+                    checkResult=`selected ${artist.name}, artist id: ${artist.artist_id}`
+                    break;
+                    
+                default:
+                    checkResult=`search found ${data.length} artists: \n- `+
+                    data.map(artist=>`${artist.name} id: ${artist.artist_id}`).join('\n- ') 
             }
             setCheck(checkResult)
             if(data.length===1) {
-                console.log(data.length)
-                console.log(data[0].name,'id', data[0].artist_id)
                 addData({name:'artist',value:data[0].artist_id})
-                // document.getElementById('checkBtn').click()
+            }else{
+                addData({name:'artist',value:undefined})
             }
+
         })
         .catch(e=>console.error(e))
     }
     return (
-        <label htmlFor='artist' >artist*
+        <label className='checkArtist' htmlFor='artist' >artist*
             <input 
                 required name='artist' 
                 placeholder='name or id'

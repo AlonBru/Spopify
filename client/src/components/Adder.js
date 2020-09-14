@@ -6,27 +6,42 @@ import AddSong from './AddSong.js'
 import AddPlaylist from './AddPlaylist.js'
 
 function Adder() {
-    const [whatToAdd,setWhatToAdd] = useState('album')
+    const [whatToAdd,setWhatToAdd] = useState('artist')
+    const [status,setStatus]= useState()
+    const [dataToSend,setDataToSend]= useState()
+    
     function pickTarget(e){
-        console.log('add', e.target.value)
         setWhatToAdd(e.target.value)
     }
+    
     function sendData(data){
-        console.log(data)
         axios.post(`/${whatToAdd}`,data)
-        .then(res=>console.log(res))
-        .catch(e=>console.error(e))
+        .then(res=>{
+            setStatus(res.data)
+        })
+        .catch(e=>{
+            setStatus(e.data)
+        })
+    }
+    function testConnection(){
+        axios.get(`/ping`)
+        .then(res=>{
+            setStatus(res.data)
+        })
+        .catch(e=>{
+            setStatus(e.data)
+        })
     }
     const drawInput = () => {
          switch(whatToAdd){
              case 'artist':
-                return <AddArtist sendData={sendData}/>;
+                return <AddArtist sendData={sendData} sendStatus={setStatus} />;
              case 'album':
-                return <AddAlbum sendData={sendData}/>;
+                return <AddAlbum sendData={sendData} sendStatus={setStatus} />;
              case 'song':
-                return <AddSong sendData={sendData}/>;
+                return <AddSong sendData={sendData} sendStatus={setStatus} />;
              case 'playlist':
-                return <AddPlaylist sendData={sendData}/>;
+                return <AddPlaylist sendData={sendData} sendStatus={setStatus} />;
             default:
                 return <p> please select what you want to add</p>
          }
@@ -36,12 +51,17 @@ function Adder() {
         <div id='adder'>
             <select defaultValue='' name='target' onChange={pickTarget}>
                 <option value=''  disabled >what to add?</option>
-                <option>song</option>
-                <option>album</option>
-                <option>artist</option>
-                <option>playlist</option>
+                <option>add a song</option>
+                <option>add an album</option>
+                <option>add an artist</option>
+                <option>add a playlist</option>
             </select>
+            
             {drawInput()}
+            {/* <button onClick={() => {setStatus({status:'success',message:'sent.'})}}>setStatus</button> */}
+           <button onClick={sendData}>test Error</button>
+           <button onClick={testConnection}>test connection</button>
+            <p className={status?status.status:''}>{status?status.message:''}</p>
         </div>
   )
 }

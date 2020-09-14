@@ -1,7 +1,7 @@
 import React from 'react';
 import CheckArtist from './CheckArtist.js';
 
-function AddAlbum({sendData}) {
+function AddAlbum({sendData,sendStatus}) {
     const dataToAdd = {};
     const inputChange = (e) => {
         addData(e.target)
@@ -10,14 +10,20 @@ function AddAlbum({sendData}) {
         dataToAdd[name]=value
         console.log(dataToAdd)
     }
-    return (
-        <form 
-        autoComplete='off'
-        onSubmit={(e)=>{
-            e.preventDefault()
-            sendData(dataToAdd)
+    const submitChecks = (e)=>{
+        e.preventDefault()
+        if(!dataToAdd.artist){
+            sendStatus({status:'error',message:"can't have album with no artist"})
+        }else{
             e.target.reset()
-        }}>
+            sendData(dataToAdd)
+        }
+    }
+    return (
+        <form
+        id='form'
+        autoComplete='off'
+        onSubmit={submitChecks}>
             <CheckArtist addData={addData} />
             <label htmlFor='name'>album name*:   
                 <input required name='name' placeholder='album name' onChange={inputChange}/> <br />

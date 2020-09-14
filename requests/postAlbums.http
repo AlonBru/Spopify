@@ -1,13 +1,9 @@
 POST http://localhost:3000/album
 Content-Type: application/json
 
-[
-    1, 
-    "name",
-    "cover_img",
-    "2020-11-11",
-    "2020-11-11",
-    12
-]
-
-# artist INT
+{
+   "artist":"1",
+   "name": "name",
+   "cover_img": "cover_img",
+   "released": "2020-11-11"
+}

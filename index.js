@@ -26,6 +26,9 @@ db.connect(err => {
     console.log("MYSQL Connected!");
 });
 
+app.get('/ping',(req,res) => {
+    res.send({status:'success',message:'pong!'})
+})
 app.get('/search/artist',(req,res)=> {
     queries.searchArtist(req,res,db)
 })
@@ -46,17 +49,20 @@ app.get('/:target/:id', (req, res) => {
 app.get('/:target', (req, res) => {
     queries.getAll(req,res,db)
 });
+// add an entry
+app.post('/:target',(req,res) => {
+    queries.addNew(req,res,db)
+})
 //update an entry
 app.put('/:target/:id',(req,res) => {
     queries.updateById(req,res,)
 })
+//delete an entry
 app.delete('/:target/:id',(req,res) => {
     queries.deleteById(req,res,db)
 })
 
-app.post('/:target',(req,res) => {
-    queries.addNew(req,res,db)
-})
+
 
 const port = process.env.PORT
 app.listen(port,()=>{

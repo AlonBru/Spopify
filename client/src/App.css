@@ -16,3 +16,11 @@ input{
     margin-left: 4px;
     background-color: hotpink;
 }
+.error{
+    color:white;
+    background-color:#ff0033;
+}
+.success{
+    color:white;
+    background-color:#61fda7;
+}

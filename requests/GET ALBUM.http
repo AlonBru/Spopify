@@ -1,4 +1,4 @@
-GET http://localhost:3000/album
+GET http://localhost:8000/album/bopo
 Content-Type: application/json
 
 [

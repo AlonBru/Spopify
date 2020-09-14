@@ -1,3 +1,5 @@
+const e = require("express")
+
 const getAll =(req, res,db) => {
     const {target} = req.params
     const page = req.query.page||0
@@ -16,7 +18,8 @@ const getAll =(req, res,db) => {
 const topSongs =(req, res,db) => {
     const page = req.query.page||0
     db.query(
-        `SELECT s.name, sum(play_count) AS plays  FROM songs AS s
+        `SELECT s.name, sum(play_count) AS plays  
+        FROM songs AS s
         JOIN interactions AS i
         ON s.song_id = i.song_id
         GROUP BY s.song_id 
@@ -64,12 +67,17 @@ const getFields =(req, res,db) => {
 const getById =(req, res,db) => {
     const {target,id} = req.params
     console.log('id', id, 'traget',target)
-    db.query(
-        `SELECT * 
-        FROM ${target}s 
-        WHERE name LIKE '%${id}%' OR ${target}_id='${id}' 
-        `,
-    (err, results, fields) => {
+    let sql = [
+        `SELECT * FROM ${target}s`,
+        '',
+        `WHERE name LIKE '%${id}%' OR ${target}_id='${id}'`
+    ]
+    if(target==='song'||target==='album'){ 
+        sql[1]=
+        `JOIN (SELECT artist_id, name AS artist_name from artists) AS a
+    On a.artist_id = ${target}s.artist`}
+
+    db.query( sql.join(' '), (err, results, fields) => {
         if (err) {
             res.send(err.message);
         };
@@ -91,15 +99,18 @@ const searchArtist =(req, res,db) => {
 }
 const addNew =(req, res,db) => {
     const {target} = req.params
-    const {body }= req
+    const {body}= req
     body.uploaded_at = new Date
     db.query(`INSERT INTO ${target}s 
     set ?`,[body], (err, results, fields) => {
         if (err) {
-            res.send(err.message);
+            // res.json({status:'error',message:err.message});
+            console.error(err.message)
+            res.send({status:'error',message:err.message});
+            return
         };
         console.log(`added ${target} '${body.name}'`)
-        // res.status(200);
+        res.send({status:'success',message:body.name+' added!'});
     }); 
 }
 const updateById = (req,res,db) => {
