@@ -1,0 +1,28 @@
+POST http://localhost:3000/song
+Content-Type: application/json
+
+{
+     "youtube_link":"https://www.youtube.com/watch?v=oHg5SJYRHA0&ab_channel=cotter548", 
+    "album":    null, 
+    "artist":    3, 
+    "name":    "a downy song", 
+    "length":    "00:03:00", 
+    "track_number":    1, 
+    "lyrics":    "somewords", 
+     "released":    "2020-11-12", 
+    "uploaded_at":    "2020-11-12", 
+    "genres":    9, 
+    "likes_number":    13 
+}
+
+# youtube_link VARCHAR
+#album INT
+#artist INT
+#title VARCHAR
+#length TIME
+#track_number INT
+#lyrics TEXT
+# released DATE
+#uploaded_at DATE
+#genres SET
+#likes_number INT

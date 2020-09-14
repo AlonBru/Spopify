@@ -1,0 +1,28 @@
+GET http://localhost:3000/album
+Content-Type: application/json
+
+[
+    "https://www.youtube.com/watch?v=oHg5SJYRHA0&ab_channel=cotter548", 
+        1, 
+        1, 
+        "some song", 
+        "00:03:00", 
+        1, 
+        "somewords", 
+        "2020-11-12", 
+        "2020-11-12", 
+        "", 
+        13 
+]
+
+# youtube_link VARCHAR
+#album INT
+#artist INT
+#title VARCHAR
+#length TIME
+#track_number INT
+#lyrics TEXT
+# released DATE
+#uploaded_at DATE
+#genres SET
+#likes_number INT
