@@ -18,12 +18,9 @@ function AddSong({sendData}) {
             sendData(dataToAdd)
             e.target.reset()
         }}>
-            <CheckArtist addData={addData} />
+            <CheckArtist addData={addData} checkAlbum={true} />
             <label htmlFor='name'>album name*:   
                 <input required name='name' placeholder='album name' onChange={inputChange}/> <br />
-            </label>
-            <label htmlFor='cover_img'>Cover Art: 
-                <input name='cover_img' placeholder='cover image url' onChange={inputChange} /><br />
             </label>
             <label htmlFor='released'>release date*: 
                 <input required name='released' type='date' onChange={inputChange} /> 
