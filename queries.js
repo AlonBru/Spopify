@@ -104,7 +104,6 @@ const addNew =(req, res,db) => {
     db.query(`INSERT INTO ${target}s 
     set ?`,[body], (err, results, fields) => {
         if (err) {
-            // res.json({status:'error',message:err.message});
             console.error(err.message)
             res.send({status:'error',message:err.message});
             return

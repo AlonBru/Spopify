@@ -1,4 +1,4 @@
-import React , {useState,useEffect} from 'react';
+import React , {useState} from 'react';
 import axios from 'axios'
 import AddArtist from './AddArtist.js'
 import AddAlbum from './AddAlbum.js'
@@ -6,9 +6,8 @@ import AddSong from './AddSong.js'
 import AddPlaylist from './AddPlaylist.js'
 
 function Adder() {
-    const [whatToAdd,setWhatToAdd] = useState('artist')
+    const [whatToAdd,setWhatToAdd] = useState('')
     const [status,setStatus]= useState()
-    const [dataToSend,setDataToSend]= useState()
     
     function pickTarget(e){
         setWhatToAdd(e.target.value)
@@ -40,8 +39,6 @@ function Adder() {
                 return <AddAlbum sendData={sendData} sendStatus={setStatus} />;
              case 'song':
                 return <AddSong sendData={sendData} sendStatus={setStatus} />;
-             case 'playlist':
-                return <AddPlaylist sendData={sendData} sendStatus={setStatus} />;
             default:
                 return <p> please select what you want to add</p>
          }
@@ -51,10 +48,9 @@ function Adder() {
         <div id='adder'>
             <select defaultValue='' name='target' onChange={pickTarget}>
                 <option value=''  disabled >what to add?</option>
-                <option>add a song</option>
-                <option>add an album</option>
-                <option>add an artist</option>
-                <option>add a playlist</option>
+                <option value='song'>add a song</option>
+                <option value='album' >add an album</option>
+                <option  value='artist' >add an artist</option>
             </select>
             
             {drawInput()}

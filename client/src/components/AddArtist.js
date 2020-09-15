@@ -1,5 +1,4 @@
-import React , {useState,useEffect} from 'react';
-import axios from 'axios';
+import React from 'react';
 
 function AddArtist({sendData,sendStatus}) {
     const dataToAdd ={}
@@ -23,7 +22,7 @@ function AddArtist({sendData,sendStatus}) {
         id='form'
         autoComplete='off'
         onSubmit={submitChecks} >
-            <input type='reset' for='form'/> <br/>
+            <input type='reset' htmlFor='form'/> <br/>
             <label htmlFor='name'>artist name*:   
                 <input required name='name' placeholder='artist name' onChange={inputChange}/> <br />
             </label>

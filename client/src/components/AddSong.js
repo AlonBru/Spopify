@@ -30,6 +30,8 @@ function AddSong({sendData,sendStatus,showData}) {
             sendStatus({status:'error',message:'chosen album is not by chosen artist!'})
         }else{
             e.target.reset()
+            const album_id=dataToAdd.album.album_id
+            dataToAdd.album = album_id
             sendData(dataToAdd)
         }
     }
@@ -57,7 +59,7 @@ function AddSong({sendData,sendStatus,showData}) {
                 <input step='1' required name='track_number' type='number' onChange={inputChange} /> 
             </label><br />
             <legend>lyrics:</legend>
-                <textarea style={{width:'60vw'}} form='form' wrap='soft' rows='6' maxlength='10000' required name='lyrics' type='textarea' onChange={inputChange} /> 
+                <textarea style={{width:'60vw'}} form='form' wrap='soft' rows='6' maxLength='10000' required name='lyrics' type='textarea' onChange={inputChange} /> 
             <div onClick={addGenres} >
                 <legend>genres:</legend>
                     <label htmlFor='1'>

@@ -31,9 +31,10 @@ function CheckAlbum({addData}) {
             setCheck(checkResult)
             if(data.length===1) {
                 let {artist,album_id,released} = data[0]
-                console.log({name:'album',value:{artist,album_id}})
-                addData({name:'album',value:{artist,album_id}=data[0]})
-                addData({name:'released',value:released})
+                const date = new Date(released)
+                const dateString = `${date.getFullYear()}-${date.getMonth()+1}-${date.getDate()}`
+                addData({name:'album',value:{artist,album_id}})
+                addData({name:'released',value:dateString})
             }else{
                 addData({name:'album',value:undefined})
             }
