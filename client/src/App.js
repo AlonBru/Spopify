@@ -1,22 +1,37 @@
 import React from 'react';
 import './App.css';
-// import ItemList from './components/ItemList.js';
-import Adder from './components/Adder.js';
+import Adder from './pages/Adder.js';
+import Song from './pages/Song.js';
+import error404 from './pages/error404.js';
+import Home from './pages/Home.js';
+import Search from './components/Search.js';
+import Nav from './components/Nav.js';
+import {
+    BrowserRouter as Router,
+    Switch,
+    Route,
+    } from "react-router-dom";
+  
 
-function App() {
-
-  return (
-      <main>
-        <Adder/>
-        <h1>ELLO MATE</h1>
-        {/* <iframe src="https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m" width="300" height="380" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe>
-        <iframe width="560" height="315" src="https://www.youtube.com/embed/XJBUWZsT38c" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe> */}
-        {/* <ItemList target='artist'/>
-        <ItemList target='album'/>
-        <ItemList target='song'/> */}
-
-      </main>
-  )
+function App() { 
+    return (
+        <div id='app'>
+        <Router>
+        
+            <Nav/>
+            <main>
+                <Search />
+                <Switch>
+                    <Route path="/adder" component={Adder} />
+                    <Route path="/song/:id" component={Song} />
+                    <Route exact path="/"  component={Home} />
+                    <Route path="*" component={error404} />
+                    
+                </Switch>
+            </main>
+        </Router>
+        </div>
+  );
 }
 
 export default App;

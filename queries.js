@@ -7,7 +7,6 @@ const getAll =(req, res,db) => {
     console.log(page)
     db.query(
         `SELECT * FROM ${target}s 
-        ORDER BY likes_number DESC 
         LIMIT 20 OFFSET ${page*20}`,
      (err, results, fields) => {
         if (err) {console.error(err)};
@@ -18,41 +17,64 @@ const getAll =(req, res,db) => {
 const topSongs =(req, res,db) => {
     const page = req.query.page||0
     db.query(
-        `SELECT s.name, sum(play_count) AS plays  
+        `SELECT 
+        s.song_id AS id, s.name as name, 
+        al.cover_img AS img,
+        sum(i.play_count) AS plays  
         FROM songs AS s
-        JOIN interactions AS i
+        LEFT JOIN interactions AS i
         ON s.song_id = i.song_id
+        Join albums As al
+        ON s.album=al.album_id
         GROUP BY s.song_id 
         LIMIT 20 OFFSET ${page*20};`,
      (err, results, fields) => {
-        if (err) {console.error(err)};
+        if (err) {
+            console.error(err);
+            return
+        }
         console.log(`got top songs`+page>0?` page ${page}`:'')
         res.send({results:results,fields:fields.map(field=>field.name)});
       }); 
-    }//TODO make it work by play_count
+    }
 const topAlbums =(req, res,db) => {
     const page = req.query.page||0
     db.query(
-        `SELECT al.album_id, al.name, ar.name AS artist, sum, count(s.name) AS 'number of songs'
-        FROM albums AS al
-        Join (
-            SELECT s.name, s.album, sum(play_count) AS sum 
-            FROM songs AS s
-            Join interactions AS i
-            on s.song_id=i.song_id
-            group by s.song_id
-        ) AS s
-        on al.album_id=s.album
-        JOIN artists as ar
-        ON al.artist = ar.artist_id
-        GROUP BY al.album_id; 
-        LIMIT 20 OFFSET ${page*20};`,
+        `SELECT 
+        al.album_id AS id, al.name as name, al.cover_img AS img,
+         sum(i.play_count) AS plays  
+         FROM songs AS s
+         JOIN interactions AS i
+         ON s.song_id = i.song_id
+         Join albums As al
+         ON s.album=al.album_id
+         GROUP BY al.name 
+         LIMIT 20 OFFSET ${page*20};`,
      (err, results, fields) => {
         if (err) {console.error(err)};
         console.log(`got top albums`+page>0?` page ${page}`:'')
         res.send({results:results,fields:fields.map(field=>field.name)});
       }); 
-    }//TODO make it work by play_count
+    }
+const topArtists =(req, res,db) => {
+    const page = req.query.page||0
+    db.query(
+        `SELECT 
+        ar.artist_id AS id, ar.name as name, ar.img AS img,
+         sum(i.play_count) AS plays  
+         FROM songs AS s
+         JOIN interactions AS i
+         ON s.song_id = i.song_id
+         Join artists As ar
+         ON s.album=ar.artist_id
+         GROUP BY ar.name 
+         LIMIT 20 OFFSET ${page*20};`,
+     (err, results, fields) => {
+        if (err) {console.error(err)};
+        console.log(`got top Artists`+page>0?` page ${page}`:'')
+        res.send({results:results,fields:fields.map(field=>field.name)});
+      }); 
+    }
 
 const getFields =(req, res,db) => {
     const {target} = req.params
@@ -66,16 +88,31 @@ const getFields =(req, res,db) => {
     }
 const getById =(req, res,db) => {
     const {target,id} = req.params
-    console.log('id', id, 'traget',target)
+    console.log('id', id, 'target',target)
     let sql = [
         `SELECT * FROM ${target}s`,
         '',
-        `WHERE name LIKE '%${id}%' OR ${target}_id='${id}'`
+        `WHERE ${target}_id='${id}' OR name LIKE '%${id}%' `
     ]
-    if(target==='song'||target==='album'){ 
-        sql[1]=
-        `JOIN (SELECT artist_id, name AS artist_name from artists) AS a
-    On a.artist_id = ${target}s.artist`}
+    switch(target){
+        case 'song':
+            sql[1]=
+            `LEFT JOIN(
+                SELECT album_id, ar.name AS artist_name,
+                al.name AS album_name
+                from artists AS ar
+                JOIN albums AS al
+                ON al.artist = ar.artist_id
+            ) AS a
+            On a.album_id = ${target}s.album`
+            break;
+        case 'album':
+            sql[1]=
+            `JOIN (
+                SELECT artist_id, name AS artist_name from artists) AS a
+            On a.artist_id = ${target}s.artist`
+            break;
+    }
 
     db.query( sql.join(' '), (err, results, fields) => {
         if (err) {
@@ -88,7 +125,21 @@ const getById =(req, res,db) => {
 const searchArtist =(req, res,db) => {
     const target = 'artist'
     const {search} = req.query
-    db.query(`SELECT artist_id AS id,name, img FROM ${target}s 
+    db.query(`SELECT artist_id AS id,name, img 
+    FROM ${target}s 
+    WHERE name LIKE '%${search}%'`,
+    (err, results, fields) => {
+        if (err) {
+            res.send(err.message);
+        };
+        res.send(results);
+    }); 
+}
+const searchAll = (req, res,db) => {
+    const target = 'artist'
+    const {search} = req.query
+    db.query(`SELECT artist_id AS id,name, img 
+    FROM ${target}s 
     WHERE name LIKE '%${search}%'`,
     (err, results, fields) => {
         if (err) {
@@ -144,5 +195,5 @@ module.exports ={
     searchArtist,
     topSongs,
     topAlbums,
-    // topArtists
+    topArtists
 }

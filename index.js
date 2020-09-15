@@ -40,6 +40,12 @@ app.get('/fields/:target', (req,res) => {
 app.get('/top_songs',(req,res) => {
     queries.topSongs(req,res,db)
 })
+app.get('/top_albums',(req,res) => {
+    queries.topAlbums(req,res,db)
+})
+app.get('/top_artists',(req,res) => {
+    queries.topArtists(req,res,db)
+})
 //get by id
 app.get('/:target/:id', (req, res) => {
     console.log('getbyid')
