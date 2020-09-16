@@ -1,7 +1,8 @@
 import React from 'react';
 import './App.css';
-import Adder from './pages/Adder.js';
+// import Adder from './pages/Adder.js';
 import Song from './pages/Song.js';
+import Artist from './pages/Artist.js';
 import error404 from './pages/error404.js';
 import Home from './pages/Home.js';
 import Search from './components/Search.js';
@@ -22,8 +23,9 @@ function App() {
             <main>
                 <Search />
                 <Switch>
-                    <Route path="/adder" component={Adder} />
+                    {/* <Route path="/adder" component={Adder} /> */}
                     <Route path="/song/:id" component={Song} />
+                    <Route path="/Artist/:id" component={Artist} />
                     <Route exact path="/"  component={Home} />
                     <Route component={error404} />
                     

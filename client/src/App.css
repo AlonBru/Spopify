@@ -91,3 +91,6 @@ input{
 #play.playing{
     background-image: url(./icons/pause.svg);
     }
+img.artist{
+    border-radius:50%;
+}
