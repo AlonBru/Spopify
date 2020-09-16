@@ -1,47 +1,61 @@
 import React, {useState,useEffect,} from 'react';
 import {Link,useLocation} from "react-router-dom";
 import axios from 'axios'
+import Loading from '../components/Loading.js'
+// import play from './play.svg'
+// import pause from './pause.svg'
 
 function Song( {match}) { 
+    const [song,setSong] = useState()
+    const [hover,setHover] = useState(false)
+    const [isPlaying,setIsPlaying] = useState(false)
+    useEffect(getSong,[])
     function useQuery() {
         return new URLSearchParams(useLocation().search);
     }
     const queries=useQuery()
-    console.log(useLocation())
-    useEffect(getSong,[])
     function getSong(){
-         axios.get(`/song/${match.params.id}`)
-         .then(({data})=>{
-             console.log(data)
-             if(Array.isArray(data)){data=data[0]}
-             setSong(data)
-            }) 
-         .catch(e=>console.error(e)) 
-        }
-    const [song,setSong] = useState([])
-    
+        axios.get(`/song/${match.params.id}`)
+        .then(({data})=>{
+            console.log(data)
+            if(Array.isArray(data)){data=data[0]}
+            setSong(data)
+        }) 
+        .catch(e=>console.error(e)) 
+    }
+    if(!song){return <Loading />}
     return (
         <div>
-        {/* <h2>{song.name}</h2> 
-        <h3>{song.artist_name}</h3>
-        <h3>{song.album_name||''}</h3> */}
-    youtube embed player, length, lyrics
-        <iframe 
-            src={`https://open.spotify.com/embed/track/2Fxmhks0bxGSBdJ92vM42m`}
-            width="300"
-            height="380"
-            frameBorder="0"
-            allowtransparency="true"
-            allow="encrypted-media">
-        </iframe>
+        <p>{song.name}</p> 
+        <p>{song.artist_name}</p>
+        <p>{song.album_name||''}</p>
+        <p>{song.length&&song.length.slice()}</p>
+        <div id='frame-wrap' 
+        onClick={()=>{console.log('xlixk')}}>
+        {/* onClick={()=>{setIsPlaying((isPlaying))}}> */}
+       {/* <div id='hider' >
+             <div id='play'
+            className={
+                hover?' hover':'' 
+                }
+                /> 
+        </div> */}
+            <iframe
+                onMouseOver={()=>{
+                    setHover(true)}}
+                onMouseOut={()=>{setHover(false)}}
+                id='frame'
+                src={`https://open.spotify.com/embed/track/${song.youtube_link}`}
+                width="300"
+                height="380"
+                frameBorder="0"
+                allowtransparency="true"
+                allow="encrypted-media">
+            </iframe>
+            
+        </div>
+                <p>{isPlaying?' playing':'not'} {hover?' hover':' novere'}</p>
         </div>
     )
 }
 export default Song;
-{/*  show name, artist name, album,
-    youtube embed player, length, lyrics.
-    If came from artist it should add 
-    ?artist=g45g4 parameter and show suggested songs
- from the same artists on the right of the song page.
- If came from album it should add ?album=g45g4 parameter 
-and show suggested songs from the same album on the right of the song page If came from playlist it should add ?playlist=g45g4 parameter and show suggested songs from the same playlist on the right of the song page.*/}

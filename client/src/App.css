@@ -48,3 +48,46 @@ input{
     padding: 3px 6px;
     border-radius: 20%/50% ;
 }
+#frame{
+    
+}
+#frame-wrap{
+    position: relative;
+    background-color: red;
+    width:80px;
+    height: 80px;
+    overflow: hidden;
+}
+#hider{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    position: absolute;
+    height:80px;
+    width:80px;
+    background: #113;
+}
+#play{
+    transition:.3s;
+    background-image: url(./icons/play.svg);
+    background-size:40px;
+    overflow: visible;
+    justify-self: center;
+    height:40px;
+    width:40px;
+    pointer-events: none;
+    border-radius: 50%;
+    box-shadow: 0 0 5px .5px white;
+    
+}
+#play.hover{
+    border-width: 40px;
+    height:45px;
+    width: 45px;
+    background-size:45px;
+    
+}
+#play.playing{
+    background-image: url(./icons/pause.svg);
+    }

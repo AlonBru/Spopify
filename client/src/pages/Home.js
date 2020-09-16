@@ -6,6 +6,7 @@ import axios from 'axios'
 import Carousel from '../components/Carousel.js' 
 function Home({match}) {
     console.log(match)
+    
     return(
         <div>
         <h1>HOME</h1>

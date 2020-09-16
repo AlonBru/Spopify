@@ -9,7 +9,12 @@ const getAll =(req, res,db) => {
         `SELECT * FROM ${target}s 
         LIMIT 20 OFFSET ${page*20}`,
      (err, results, fields) => {
-        if (err) {console.error(err)};
+        if (err) {
+
+            console.error(err)
+            console.log('error from getAll')
+            return
+        };
         console.log(`got ${target}s`+page>0?` page ${page}`:'')
         res.send({results:results,fields:fields.map(field=>field.name)});
       }); 
@@ -31,6 +36,7 @@ const topSongs =(req, res,db) => {
      (err, results, fields) => {
         if (err) {
             console.error(err);
+            console.log('error from topSongs')
             return
         }
         console.log(`got top songs`+page>0?` page ${page}`:'')
@@ -51,7 +57,11 @@ const topAlbums =(req, res,db) => {
          GROUP BY al.name 
          LIMIT 20 OFFSET ${page*20};`,
      (err, results, fields) => {
-        if (err) {console.error(err)};
+        if (err) {
+            console.error(err)
+            console.log('error from topAlbum')
+            return
+        };
         console.log(`got top albums`+page>0?` page ${page}`:'')
         res.send({results:results,fields:fields.map(field=>field.name)});
       }); 
@@ -70,7 +80,11 @@ const topArtists =(req, res,db) => {
          GROUP BY ar.name 
          LIMIT 20 OFFSET ${page*20};`,
      (err, results, fields) => {
-        if (err) {console.error(err)};
+        if (err) {
+            console.error(err)
+            console.log('error from topArtists')
+            return
+        };
         console.log(`got top Artists`+page>0?` page ${page}`:'')
         res.send({results:results,fields:fields.map(field=>field.name)});
       }); 
@@ -81,7 +95,11 @@ const getFields =(req, res,db) => {
     db.query(
         `SELECT * FROM ${target}s WHERE ${target}_id=1`,
      (err, results, fields) => {
-        if (err) {console.error(err)};
+        if (err) {
+            console.error(err)
+            console.log('error from getFields')
+            return
+        };
         console.log(`got fields for ${target}s`)
         res.send(fields.map(column=>column.name));
       }); 
@@ -116,12 +134,40 @@ const getById =(req, res,db) => {
 
     db.query( sql.join(' '), (err, results, fields) => {
         if (err) {
+            console.error(err)
+            console.log('error from getFields')
             res.send(err.message);
+            return
         };
         console.log(`got ${target} with id ${id}`)
         res.send(results);
     }); 
 }
+const getAlbum =(req, res,db) => {
+    const {id} = req.params
+    db.query( `SELECT * FROM albums WHERE album_id=${id}`,
+     (err, album, fields) => {
+        if (err) {
+            console.error(err)
+            console.log('error from getAlbum')
+            res.send(err.message)
+            return;
+        };
+        db.query(
+            `select * from songs
+            where songs.album = ${album[0].album_id}`, (err,songs,fields)=>{
+                if (err) {
+                    console.error(err)
+                    console.log('error from getAlbum')
+                    res.send(err.message);
+                    return
+                };
+                res.json({album,songs})
+            }
+        )
+    }); 
+}
+
 const searchArtist =(req, res,db) => {
     const target = 'artist'
     const {search} = req.query
@@ -130,7 +176,10 @@ const searchArtist =(req, res,db) => {
     WHERE name LIKE '%${search}%'`,
     (err, results, fields) => {
         if (err) {
+            console.error(err)
+            console.log('error from searchArtist')
             res.send(err.message);
+            return
         };
         res.send(results);
     }); 
@@ -143,7 +192,10 @@ const searchAll = (req, res,db) => {
     WHERE name LIKE '%${search}%'`,
     (err, results, fields) => {
         if (err) {
+            console.error(err)
+            console.log('error from searchAll')
             res.send(err.message);
+            return
         };
         res.send(results);
     }); 
@@ -195,5 +247,6 @@ module.exports ={
     searchArtist,
     topSongs,
     topAlbums,
-    topArtists
+    topArtists,
+    getAlbum
 }

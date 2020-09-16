@@ -19,13 +19,16 @@ let db = mysql.createConnection({
     password: process.env.DB_PASSWORD,
     database: process.env.DB_NAME,
     multipleStatements: true
-  });
+});
 
 db.connect(err => {
     if (err) throw err;
     console.log("MYSQL Connected!");
 });
 
+app.get('/getAlbum/:id',(req,res) => {
+    queries.getAlbum(req,res,db)
+})
 app.get('/ping',(req,res) => {
     res.send({status:'success',message:'pong!'})
 })
@@ -68,7 +71,10 @@ app.delete('/:target/:id',(req,res) => {
     queries.deleteById(req,res,db)
 })
 
-
+app.get('*',(req,res)=>{
+    console.log('nothing caught')
+    // res.send()
+})
 
 const port = process.env.PORT
 app.listen(port,()=>{

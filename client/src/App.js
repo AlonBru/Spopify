@@ -9,7 +9,7 @@ import Nav from './components/Nav.js';
 import {
     BrowserRouter as Router,
     Switch,
-    Route,
+    Route
     } from "react-router-dom";
   
 
@@ -25,7 +25,7 @@ function App() {
                     <Route path="/adder" component={Adder} />
                     <Route path="/song/:id" component={Song} />
                     <Route exact path="/"  component={Home} />
-                    <Route path="*" component={error404} />
+                    <Route component={error404} />
                     
                 </Switch>
             </main>
