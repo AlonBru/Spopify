@@ -1,0 +1,100 @@
+.home{
+    position: relative;
+}
+header{
+    position: relative;
+    height: 40vh;
+    background-image: linear-gradient(to bottom,
+    #444 , #222 );
+}
+h1{
+    position: absolute;
+    bottom:0px;
+    margin-left:15px;
+    font-size: xxx-large;
+}
+#mini{
+    transition: .4s;
+    color: transparent;
+    background-color: transparent;
+    overflow: hidden;
+    position: relative;
+    position:fixed;
+    top:4vh;
+    z-index: 2;
+}
+#mini h1{
+    margin:0 0 0 10px;
+}
+#mini.show{
+    transition: .4s;
+    color:white;
+    background-color: #1a1a1a;
+    height: 12vh;
+    width:100%;
+    padding-bottom: 10px;
+    border-bottom: 2px #333 solid;
+}
+.carousel h2{
+    margin-left:5px; 
+}
+.carousel .charts{
+    display: flex;
+    grid-area: charts;
+    width: 800px;
+    padding: 0 5px;
+}
+.carousel button{
+    transition:0.2s;
+    position: relative;
+    bottom: 50px;
+    height: 50px;
+    width: 50px;
+    background-color: rgba(200,200,200,.3);
+    border-radius: 50%;
+    border:none;
+    background-image: url('../icons/play.svg');
+    background-size: 50px;
+}
+.carousel button:disabled{
+    transition:0.2s;
+    background-image: url('../icons/play_disabled.svg');
+    
+} 
+.right{
+    grid-area: right;
+}
+.left{
+    transform: scaleX(-1);
+    grid-area: left;
+}
+.carousel .display{
+display:grid;
+grid-template-columns: 50px 1fr 50px;
+grid-template-areas: "left charts right";
+align-items: center;
+padding: 0 5px;
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    height: 250px;
+    padding: 2px;
+    margin: 5px;
+}
+.card h3{
+    margin:0;
+    margin-left:10px;
+    height: 50px;
+}
+.card p{
+    margin:0;
+    align-self: flex-start;
+    margin-left:16px;
+}
+.card img{
+
+}
+.artistImg{
+    border-radius:50%;
+}

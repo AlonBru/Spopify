@@ -7,8 +7,6 @@ function Nav(){
             activeClassName='selected'
             isActive={(match,location) => {
                 return (
-                    location.pathname.slice(1) ==='/home'
-                    ||
                     location.pathname.slice(1) === ''
                 )
             }}>

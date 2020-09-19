@@ -8,7 +8,7 @@ function SongList({list}){
         <div className='songlist'>
         <div className='song header'>
                     <span></span>
-                    <span></span>
+                    <span>#</span>
                     <span></span>
                     <span style={{textAlign:'start'}}>TITLE</span>
                     <span>length</span>

@@ -3,12 +3,15 @@ const song =(page, res,db) => {
         `SELECT 
         s.song_id AS id, s.name as name, 
         al.cover_img AS img,
-        sum(i.play_count) AS play_count  
+        sum(i.play_count) AS play_count,
+        ar.name AS artist, ar.artist_id
         FROM songs AS s
         LEFT JOIN interactions AS i
         ON s.song_id = i.song_id
         Join albums As al
         ON s.album=al.album_id
+        JOIN artists as ar
+        ON ar.artist_id = al.artist
         GROUP BY s.song_id 
         ORDER BY play_count DESC
         LIMIT 20 OFFSET ${page*20};
@@ -18,19 +21,22 @@ const song =(page, res,db) => {
             console.error(err);
             return
         }
-        res.send({results});
+        res.send(results);
       }); 
     }
 const album =(page, res,db) => {
     db.query(
         `SELECT 
         al.album_id AS id, al.name as name, al.cover_img AS img,
-         sum(i.play_count) AS play_count  
+         sum(i.play_count) AS play_count,
+         ar.name AS artist, ar.artist_id  
          FROM songs AS s
          JOIN interactions AS i
          ON s.song_id = i.song_id
          RIGHT Join albums As al
          ON s.album=al.album_id
+         JOIN artists as ar
+         ON ar.artist_id = al.artist
          GROUP BY al.name
          ORDER BY play_count DESC
          LIMIT 20 OFFSET ${page*20};`,
@@ -39,7 +45,7 @@ const album =(page, res,db) => {
                 console.error(err);
                 return
             }
-            res.send({results});
+            res.send(results);
     }); 
 }
 const artist =(page, res,db) => {
@@ -60,7 +66,7 @@ const artist =(page, res,db) => {
                 console.error(err);
                 return
             }
-            res.send({results});
+            res.send(results);
     }); 
 }
 const playlist =(page, res,db) => {
@@ -80,7 +86,7 @@ const playlist =(page, res,db) => {
                 console.error(err);
                 return
             }
-            res.send({results});
+            res.send(results);
     }); 
 }
 module.exports={artist,album,song,playlist}
