@@ -26,38 +26,54 @@ db.connect(err => {
     console.log("MYSQL Connected!");
 });
 
-app.get('/getAlbum/:id',(req,res) => {
-    queries.getAlbum(req,res,db)
-})
 app.get('/ping',(req,res) => {
     res.send({status:'success',message:'pong!'})
 })
+
 app.get('/search/artist',(req,res)=> {
     queries.searchArtist(req,res,db)
 })
 //get the column names 
+
 app.get('/fields/:target', (req,res) => {
     queries.getFields(req,res,db)
 })
-// get top 20 (define a query ?page=0,1,2,3 for the next 20)
-app.get('/top_songs',(req,res) => {
-    queries.topSongs(req,res,db)
+
+// get target by (e.g songs by artist) 
+app.get('/getByArtist/:target', (req,res) => {
+    const {target} = req.params
+    const {page,id} = req.query
+    queries.getByArtist[target](id,page,res,db)
 })
-app.get('/top_albums',(req,res) => {
-    queries.topAlbums(req,res,db)
+
+// get target by (e.g songs by artist) 
+app.get('/getByAlbum/songs', (req,res) => {
+    const {id} = req.query
+    console.log('getByAlbum', id)
+    queries.getByAlbum(id,res,db)
 })
-app.get('/top_artists',(req,res) => {
-    queries.topArtists(req,res,db)
+
+// get top 20 of target (define a query ?page=0,1,2,3 for the next 20)
+app.get('/top_:target',(req,res) => {
+    const {target} = req.params;
+    const page = Math.abs(req.query.page)||0;
+    queries.getTop[target](page,res,db)
 })
+
 //get by id
 app.get('/:target/:id', (req, res) => {
-    console.log('getbyid')
-    queries.getById(req,res,db)
+    const {target, id} = req.params;
+    console.log('getById',target)
+    queries.getById[target](id,res,db)
 });
-// get top 20 (define a query ?page=0,1,2,3 for the next 20)
+
+// get all of target, 20 at a page (define a query ?page=0,1,2,3 for the next 20)
 app.get('/:target', (req, res) => {
-    queries.getAll(req,res,db)
+    const page =Math.abs(req.query.page)||0;
+    const {target} =req.params;
+    queries.getAll[target](page,res,db)
 });
+
 // add an entry
 app.post('/:target',(req,res) => {
     queries.addNew(req,res,db)
@@ -71,7 +87,7 @@ app.delete('/:target/:id',(req,res) => {
     queries.deleteById(req,res,db)
 })
 
-app.get('*',(req,res)=>{
+app.get('/',(req,res)=>{
     console.log('nothing caught')
     // res.send()
 })

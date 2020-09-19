@@ -7,7 +7,7 @@ function Card({name,img,plays,id,target}) {
       const imgStyle = {height:'180px',width:'180px'};
     return (
         <div key={id} className={'card'} >
-            <Link to={`/${target}/${id}?lolo=11`}>
+            <Link to={`/${target}/${id}`}>
                 {img!=='0'
                     ?<img className={`${target}`} style={imgStyle} src={img}/>
                     :<div style={{background:'red',...imgStyle}} className='fakeAlbum'/> }

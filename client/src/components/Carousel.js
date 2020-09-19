@@ -11,7 +11,7 @@ function Carousel({target}) {
     const [page,setPage] = useState(0)
     
     useEffect(()=>{
-        axios.get(`/top_${target}s`)
+        axios.get(`/top_${target}`)
         .then(({data}) => {setTopCharts(data.results)})
         .catch(err=>{console.error(err)})
     },[])

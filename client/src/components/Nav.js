@@ -3,11 +3,18 @@ import { NavLink } from "react-router-dom";
 function Nav(){
     return(
         <nav className='Nav'>
-            <NavLink exact to='/'
-            activeClassName='selected'>
+            <NavLink to='/'
+            activeClassName='selected'
+            isActive={(match,location) => {
+                return (
+                    location.pathname.slice(1) ==='/home'
+                    ||
+                    location.pathname.slice(1) === ''
+                )
+            }}>
                 HOME
             </NavLink>
-            <NavLink exact to='/adder'
+            <NavLink to='/adder'
             activeClassName='selected'>
                 Add
             </NavLink>
