@@ -2,10 +2,10 @@ const getSongs = (id,res,db) => {
     db.query(
         `SELECT
         s.song_id, s.track_number, s.name AS title, s.length,
-        SUM(i.play_count) AS plays
+        SUM(i.play_count) AS plays, i.is_liked
         FROM songs AS s
         LEFT JOIN interactions as i
-        on s.song_id = i.song_id
+        on s.song_id = i.song_id AND user_id=1
         WHERE s.album = '${id}'
         GROUP BY s.song_id
         Order BY s.track_number ASC;

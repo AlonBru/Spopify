@@ -1,4 +1,4 @@
-import '../stylesheets/Album.css'
+import '../stylesheets/Playlist.css'
 import React, {useState,useEffect} from 'react';
 import {
     Link,
@@ -11,51 +11,51 @@ import Loading from '../components/Loading.js'
 import SongList from '../components/SongList.js'
 
 
-function Album({match}) { 
-    const [album,setAlbum] = useState()
+function Playlist({match}) { 
+    const [playlist,setPlaylist] = useState()
     const [songs,setSongs] = useState()
-    useEffect(getAlbum,[])
+    useEffect(getPlaylist,[])
     const location = useLocation()
-    function getAlbum(){
-        axios.get(`/album/${match.params.id}`)
+    function getPlaylist(){
+        axios.get(`/playlist/${match.params.id}`)
         .then(({data})=>{
             if(Array.isArray(data)){data=data[0]}
-            setAlbum(data)
+            console.log(data)
+            setPlaylist(data)
             getSongs(data)
 
         }) 
         .catch(e=>console.error(e)) 
     }
-    function getSongs(album){
-        axios.get(`/getByAlbum/songs?id=${album.album_id}`)
+    function getSongs(playlist){
+        axios.get(`/getByPlaylist/songs?id=${playlist.playlist_id}`)
         .then(({data})=>{
             console.log(data);
             setSongs(data)
         }) 
         .catch(e=>console.error(e)) 
     }
-    if(!album){return <Loading />}
+    if(!playlist){return <Loading />}
     return (
-        <div id='albumPage'>
+        <div id='playlistPage'>
             <div className='cover' 
                 >
-                <img src={album.cover_img} />
-                    <h2>{album.name}</h2> 
+                <img src={playlist.cover_img} />
+                    <h2>{playlist.name}</h2> 
                     <h4>By:
-                    <Link to={`/artist/${album.artist_id}`} >
-                     {' '+album.artist}
+                    <Link to={`/user/${playlist.user}`} >
+                     {' '+playlist.user}
                     </Link>
                      </h4> 
-                    <span>{album.released.slice(0,4)+' '}
-                    |
+                    <span>
                     {songs&&' '+songs.length} songs, 
-                    {' '+Math.round(album.total_length/60)} minutes
+                    {' '+Math.round(playlist.total_length/60)} minutes
                     </span>
             </div>
             <div className='lists'>
-            <SongList list={songs} type='album' id={album.album_id} />
+            <SongList list={songs} type='Playlist' id={playlist.playlist_id} />
             </div>
         </div>                
     )
 }
-export default Album;
+export default Playlist;

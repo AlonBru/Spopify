@@ -1,0 +1,35 @@
+#albumPage .cover h2{
+    grid-area: name;
+}
+#albumPage .cover h4{
+    grid-area: artist ;
+}
+#albumPage .cover span{
+    grid-area: details ;
+}
+#albumPage .cover img{
+    justify-self: center;
+    align-self: center;
+    grid-area: img;
+    height:180px;
+    width:180px;
+}
+
+#albumPage .cover{
+    position: relative;
+    padding-top:5vh;
+    width:100%;
+    background-color: #333;
+    color:white;
+    background-image: linear-gradient(to bottom,
+    #333 , #111 );
+    min-width: 500px;
+    display: grid;    
+    grid-template-rows:1fr 1fr 1fr ;
+    grid-template-columns: fit-content 1fr;
+    grid-template-areas: 
+    "img name"
+    "img artist"
+    "img details"
+    ;
+}

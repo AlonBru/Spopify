@@ -1,3 +1,4 @@
+import '../stylesheets/Artist.css'
 import React, {useState,useEffect} from 'react';
 import {
     Switch,
@@ -12,7 +13,8 @@ import SongList from '../components/SongList.js'
 import AlbumList from '../components/AlbumList.js'
 
 
-function Artist({match}) { 
+function Artist({match,location}) { 
+    console.log(location)
     const [artist,setArtist] = useState()
     const [albums,setAlbums] = useState()
     const [songs,setSongs] = useState()
@@ -23,16 +25,19 @@ function Artist({match}) {
         .then(({data})=>{
             if(Array.isArray(data)){data=data[0]}
             setArtist(data)
+            console.log(data)
             getAlbums(data)
             getSongs(data)
-
+            
         }) 
         .catch(e=>console.error(e)) 
     }
     function getAlbums(artist){
+        console.log('arts',artist);
         axios.get(`/getByArtist/albums?id=${artist.artist_id}`)
         .then(({data})=>{
             setAlbums(data)
+            console.log('albs',data)
         }) 
         .catch(e=>console.error(e)) 
     }
@@ -45,56 +50,22 @@ function Artist({match}) {
     }
     if(!artist){return <Loading />}
     return (
-        <div>
+        <div id='artistPage'>
             <div className='cover' 
                 //implement cover for names too long for current cover
-                style={{backgroundImage:`url(${artist.img})`}
+                style={{backgroundImage:`url(${artist.img+`?random=${artist.artist_id}`})`}
                 }
                 >
-                <h1>{artist.name}</h1> 
+                <h1 className={artist.name.length>18?'longname':undefined}>{artist.name}</h1> 
+                <button className='follow'>Follow</button>
                 <p>Play Count:{artist.play_count||0}</p> 
-                <button>Follow</button>
                 
             </div>
             <div className='lists'>
-            <Router>
-            <div className='pageNav'>
-                    <NavLink to={match.url+`/songs`}
-                        activeClassName='selected'
-                        title='Top Songs'
-                        isActive={(match,location) => {
-                            return (
-                                location.pathname.slice(9) ==='/songs'
-                                ||
-                                location.pathname.slice(9) === ''
-                            )
-                        }}
-                    >Top Songs</NavLink>
-                    <NavLink to={match.url+`/albums`}
-                        activeClassName='selected'
-                        replace
-                    >
-                        Albums
-                    </NavLink>
-                    <NavLink to={match.url+`playlists`}
-                        activeClassName='selected'
-                        replace
-                    >
-                        playlists
-                    </NavLink>
-            </div>
-                    <Switch>
-                        <Route path={match.url+`/songs`} component={SongList} >
-                            <SongList list={songs}/>
-                        </Route>
-                        <Route path={match.url+"/albums"} >
-                            <AlbumList list={albums}/>
-                        </Route>
-                        <Route path={match.url} >
-                            <SongList list={songs}/>
-                        </Route>
-                    </Switch>
-            </Router>
+            <h2>Top Songs</h2>
+            <SongList list={songs} type='Album'/>
+            <h2>Albums</h2>
+            <AlbumList list={albums}/>
             </div>
             </div>
     )

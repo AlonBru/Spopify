@@ -1,13 +1,14 @@
-.home{
+#home{
     position: relative;
+    background-color: #111;
 }
 header{
     position: relative;
     height: 40vh;
     background-image: linear-gradient(to bottom,
-    #444 , #222 );
+    #333 , #111 );
 }
-h1{
+header h1{
     position: absolute;
     bottom:0px;
     margin-left:15px;
@@ -20,11 +21,12 @@ h1{
     overflow: hidden;
     position: relative;
     position:fixed;
-    top:4vh;
+    top:0vh;
     z-index: 2;
 }
 #mini h1{
-    margin:0 0 0 10px;
+    margin:30px 0 0 10px;
+    bottom:0;
 }
 #mini.show{
     transition: .4s;
@@ -46,6 +48,7 @@ h1{
 }
 .carousel button{
     transition:0.2s;
+    outline-style:none ;
     position: relative;
     bottom: 50px;
     height: 50px;
@@ -56,8 +59,13 @@ h1{
     background-image: url('../icons/play.svg');
     background-size: 50px;
 }
+.carousel button:hover{
+    transition:0.5s;
+    box-shadow: 0 0 0 5px white;    
+} 
 .carousel button:disabled{
     transition:0.2s;
+    box-shadow: none;    
     background-image: url('../icons/play_disabled.svg');
     
 } 
@@ -93,7 +101,8 @@ padding: 0 5px;
     margin-left:16px;
 }
 .card img{
-
+    height: 180px;
+    width: 180px;
 }
 .artistImg{
     border-radius:50%;

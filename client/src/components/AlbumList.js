@@ -9,17 +9,15 @@ function AlbumList({list}){
 
         {list.map((album,i)=>{
             return (
-                <div key={album.album_id} className='album'>
-                    <Link to={`/album/${album.album_id}`}>
-                        
-                    <img src={album.cover_img} alt='coverimg' />
-                    <span style={{}}>{album.name.length<36
-                    ? album.name
-                    :album.name.slice(0,36)+'...'}</span>
-                    <span className='date'>{album.released.slice(0,4)}</span>
-                    </Link>
-
-                </div>
+                    <Link key={album.album_id} to={`/album/${album.album_id}`}>
+                    <div key={album.album_id} className='album'>
+                        <img src={album.cover_img} alt='coverimg' />
+                        <span style={{}}>{album.name.length<36
+                        ? album.name
+                        :album.name.slice(0,36)+'...'}</span>
+                        <span className='date'>{album.released.slice(0,4)}</span>
+                    </div>
+                </Link>
             )
         })}
         </div>

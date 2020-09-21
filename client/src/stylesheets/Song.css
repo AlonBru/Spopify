@@ -1,0 +1,87 @@
+#songpage{
+}
+#songPage #details{
+    grid-area: details;
+}
+#songPage h2{
+    margin: 2px 0;
+}
+#songPage h3{
+    margin: 2px 0;
+}
+#songPage h4{
+    margin: 2px 0;
+}
+#songPage .cover #frame-wrap{
+    transition: .5s;
+    justify-self: center;
+    align-self: center;
+    grid-area: img;
+    height:50px;
+    width:50px;
+    overflow: hidden;
+    position: relative;
+    border: 20px #222 outset;
+    border-radius: 50%;
+}
+#songPage .cover #frame-wrap:hover{
+    transition: .5s;
+    border: 25px rgb(0, 100, 200) outset;
+    border-radius: 50%;
+    transform: rotate(360.1deg);
+}
+
+#songPage #frame{
+    position: absolute;
+    top: -15px;
+    left: -15px;
+    margin-top:-0px;
+}
+#songPage .cover{
+    transform-style: preserve-3d;
+    position: relative;
+    padding-top:5vh;
+    width:100%;
+    background-color: #111;
+    color:white;
+    background-image: linear-gradient(to bottom,
+    #333 , #111 );
+    min-width: 500px;
+    display: grid;    
+    grid-template-rows:1fr;
+    grid-template-columns: fit-content 1fr;
+    grid-template-areas: 
+    "img details"
+    ;
+    margin-bottom:20px;
+}
+.lyricsButton{
+    cursor: pointer;
+    color:white;
+    border: 0;
+    background-color: transparent;
+    font-size: 1em;    
+}
+.lyricsButton:hover{
+    text-decoration: underline rgb(84, 153, 199);;
+}
+.lyrics{
+    padding: 3px;
+    white-space: pre;
+    z-index: 2;
+    top:5vh;
+    left:120px;
+    width:fit-content;
+    height:80vh;
+    position: fixed;
+    overflow: auto;
+    background-color: #1a1a1a;
+
+}
+.lyrics p{
+    padding:3px;
+}
+.lyrics .close{
+ position:fixed;
+ right:17vw;
+}

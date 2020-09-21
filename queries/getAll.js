@@ -44,12 +44,18 @@ const song = (page, res,db) => {
 const playlist = (page, res,db) => {
     
     db.query(
-        `SELECT * FROM playlist 
-        LIMIT 20 OFFSET ${page*20}
+        `SELECT p.*, SUM(i.play_count) AS plays ,u.nickname AS user
+        FROM playlists as p
+        LEFT Join playlist_interactions AS i
+        ON p.playlist_id = i.playlist_id
+        JOIN users as u
+        on u.user_id= p.created_by        
+        GROUP BY p.playlist_id
         `,
         (err,results,fields) => {
             if(err){
                 console.error(err)
+                res.send('error')
                 return
             }
             res.send(results)

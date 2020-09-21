@@ -1,0 +1,88 @@
+#topbar{
+    z-index:3;
+    left:120px;
+    position: fixed;
+    width: 100%;
+}
+#topbar button{
+
+    background-color: transparent;
+    outline: none;
+    background-color: none;
+    border:none;
+    color:white;
+    font-weight: 800;
+    font-size: large;
+    margin: 0 2px 0 2px;
+    cursor: pointer;
+}
+#search{
+    transition:.3s;
+    border-radius:10%/50%;
+    padding: 0 6px;
+    width:180px;
+    outline: 0;
+}
+#search:focus{
+    transition:.5s;
+    width:200px;
+}
+#searchDisplay>div{
+    grid-area: car;
+}
+#searchResults{
+    padding: 5px;
+    transition:.8s;
+    position: fixed;
+    height: 0px;
+    width:0vw;
+    overflow: hidden;
+    top: 30px;
+    left:120px;
+    display:grid;
+    grid-template-columns: 50% 50%;
+    grid-template-rows: 50% 50%;
+    grid-template-areas:
+    "car car"
+    "car car"
+    ;
+    background-image: linear-gradient(to bottom right, #0a0a0a, #444);
+}
+#searchResults.open{
+    background-image: linear-gradient(to bottom right, #0a0a0a, #444);
+    position: fixed;
+    transition:.8s;
+    height:90vh;
+    width:90.1vw;
+    min-width:1000px;
+    
+}
+
+.searchCard{
+    height:200px;
+    width:120px;
+}
+.searchCard img{
+    height:100px;
+    width:100px;
+}
+.SearchDisplay h4{
+    margin: 2px 0 0 0;
+    padding: 0 2px ;
+}
+.SearchDisplay p{
+    margin-top:2px;
+    font-size:10px;
+    padding: 0 4px;
+}
+.SearchDisplay{
+    border:1px #333 solid;
+    width:100%;
+    height:100%;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+    padding: 5px;
+    justify-content: space-around;
+    align-items: center;
+}

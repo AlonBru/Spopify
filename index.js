@@ -29,10 +29,16 @@ db.connect(err => {
 app.get('/ping',(req,res) => {
     res.send({status:'success',message:'pong!'})
 })
-
-app.get('/search/artist',(req,res)=> {
-    queries.searchArtist(req,res,db)
+//search
+app.get('/search/:target/:search',(req,res)=>{
+    const {target,search} = req.params;
+    queries.search[target](search,res,db)
 })
+
+// old search (used in adder page)
+// app.get('/search/artist',(req,res)=> {
+//     queries.searchArtist(req,res,db)
+// })
 //get the column names 
 
 app.get('/fields/:target', (req,res) => {
@@ -45,12 +51,15 @@ app.get('/getByArtist/:target', (req,res) => {
     const {page,id} = req.query
     queries.getByArtist[target](id,page,res,db)
 })
-
-// get target by (e.g songs by artist) 
 app.get('/getByAlbum/songs', (req,res) => {
     const {id} = req.query
     console.log('getByAlbum', id)
     queries.getByAlbum(id,res,db)
+})
+app.get('/getByPlaylist/songs', (req,res) => {
+    const {id} = req.query
+    console.log('getByPlaylist', id)
+    queries.getByPlaylist(id,res,db)
 })
 
 // get top 20 of target (define a query ?page=0,1,2,3 for the next 20)
@@ -63,7 +72,7 @@ app.get('/top_:target',(req,res) => {
 //get by id
 app.get('/:target/:id', (req, res) => {
     const {target, id} = req.params;
-    console.log('getById',target)
+    console.log('getById',target,id)
     queries.getById[target](id,res,db)
 });
 
@@ -73,10 +82,21 @@ app.get('/:target', (req, res) => {
     const {target} =req.params;
     queries.getAll[target](page,res,db)
 });
-
+// add song to playlist
+app.post('/songToPlaylist',(req,res) => {
+    const {song,playlist}= req.query;
+    queries.addToPlaylist(song,playlist,res,db)
+})
 // add an entry
 app.post('/:target',(req,res) => {
     queries.addNew(req,res,db)
+})
+//update an "un/like"
+app.put('/setLike/:target/:id',(req,res) => {
+    let data= [
+        {created_at:(new Date),is_liked:req.body.like},{is_liked:req.body.like}]
+    const {target,id} = req.params
+    queries.Like[target](id,data,res,db)
 })
 //update an entry
 app.put('/:target/:id',(req,res) => {

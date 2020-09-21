@@ -2,11 +2,11 @@ const songs =(id,page,res,db) => {
         db.query(
             `SELECT
             s.song_id,s.name AS title, s.length,
-            cover_img AS album_cover,
-            SUM(i.play_count) AS plays
+            cover_img AS album_cover, al.album_id,
+            SUM(i.play_count) AS plays, i.is_liked
             FROM songs AS s
             LEFT JOIN interactions as i
-            on s.song_id = i.song_id
+            on s.song_id = i.song_id AND user_id=1
             LEFT JOIN albums as al
             on s.album = al.album_id
             WHERE s.artist = ' ${id} '
@@ -26,7 +26,7 @@ const albums = (id,page,res,db) => {
     db.query(
         `SELECT *
         FROM albums 
-        WHERE artist = '7'
+        WHERE artist = '${id}'
         Order BY released DESC;
         `,
          (err, results, fields) => {

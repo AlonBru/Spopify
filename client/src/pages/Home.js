@@ -1,3 +1,4 @@
+import '../stylesheets/Home.css';
 import React , {useState} from 'react';
 import {
 Link, Switch, Route, useRouteMatch, useParams
@@ -13,13 +14,11 @@ function Home({match, mini}) {
     }
     
     return(
-        <div id='home'
-            onScroll={darken}
-        >
+        <div id='home'>
         <header>
             <h1>HOME</h1>
         </header>
-        <div id='mini' className={mini&&'show'}>
+        <div id='mini' className={mini?'show':undefined}>
             <h1>HOME</h1>
         </div>
         <h2>{`Top songs`}</h2>

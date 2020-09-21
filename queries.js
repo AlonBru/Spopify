@@ -2,8 +2,30 @@ const getById = require('./queries/getById')
 const getAll = require('./queries/getAll')
 const getTop = require('./queries/getTop')
 const getByArtist = require('./queries/getByArtist')
+const search = require('./queries/search')
+const Like = require('./queries/Like')
 const getByAlbum = require('./queries/getByAlbum')
+const getByPlaylist = require('./queries/getByPlaylist')
 
+const addToPlaylist = (song,playlist,res,db) => {
+    console.log(song,playlist)
+    db.query(
+        `
+        INSERT INTO songs_by_playlist
+        (song_id,
+        playlist_id)
+        VALUES
+        (?,?);
+        `,[song,playlist],(err, results, fields) => {
+            if (err) {
+                console.error(err)
+                res.send(err.message)
+                return
+            };
+            res.send('success');
+          })
+    
+}
 
 const getFields =(req, res,db) => {
     const {target} = req.params
@@ -48,7 +70,7 @@ const searchArtist =(req, res,db) => {
     const target = 'artist'
     const {search} = req.query
     db.query(`SELECT artist_id AS id,name, img 
-    FROM ${target}s 
+    FROM \`${target}\`s 
     WHERE name LIKE '%${search}%'`,
     (err, results, fields) => {
         if (err) {
@@ -123,7 +145,11 @@ module.exports ={
     getById,
     getTop,
     getByArtist,
+    Like,
+    search,
     getByAlbum,
+    getByPlaylist,
+    addToPlaylist,
     updateById,
     deleteById,
     addNew,

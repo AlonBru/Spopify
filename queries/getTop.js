@@ -2,7 +2,7 @@ const song =(page, res,db) => {
     db.query(
         `SELECT 
         s.song_id AS id, s.name as name, 
-        al.cover_img AS img,
+        al.album_id, al.cover_img AS img,
         sum(i.play_count) AS play_count,
         ar.name AS artist, ar.artist_id
         FROM songs AS s
@@ -71,14 +71,17 @@ const artist =(page, res,db) => {
 }
 const playlist =(page, res,db) => {
     db.query(
-        `SELECT 
-        p.artist_id AS id, p.name as name, p.cover_img AS img,
-         sum(i.play_count) AS play_count  
-         FROM playlists AS p
-         LEFT JOIN playlist_interactions AS i
-         ON p.playlist_id = i.playlist_id
-         GROUP BY p.name
-         ORDER BY play_count DESC
+        `SELECT p.playlist_id AS id, p.name,
+        p.cover_img AS img, p.created_by, 
+        SUM(i.play_count) AS plays ,
+        u.nickname AS user
+        FROM playlists as p
+        LEFT Join playlist_interactions AS i
+        ON p.playlist_id = i.playlist_id
+        JOIN spopify.users as u
+        on u.user_id= p.created_by        
+        GROUP BY p.playlist_id
+         ORDER BY plays DESC
          LIMIT 20 OFFSET ${page*20};
          `,
          (err, results, fields) => {
