@@ -45,7 +45,7 @@ function Album({ match }) {
           </Link>
         </h4>
         <span>
-          {`${album.released.slice(0, 4)} `}
+          {`${album.released?album.released.slice(0, 4):'someyear'} `}
           |
           {songs && ` ${songs.length}`}
           {' '}
