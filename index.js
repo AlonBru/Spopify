@@ -1,8 +1,8 @@
 const express = require('express');
 require('dotenv').config()
 const mysql = require('mysql');
-const queries = require('./queries');
-
+const queries = require('./helpers/queries');
+const elastic = require('./helpers/elastic');
 const app = express();
 
 app.use(express.json());
@@ -29,12 +29,23 @@ db.connect(err => {
 app.get('/ping',(req,res) => {
     res.send({status:'success',message:'pong!'})
 })
+
+app.get('/elastic/:index',(req,res) => {
+  const {index} = req.params
+  try{
+
+    elastic.getResults(index,res)
+  }catch(error){
+    console.error(error)
+  }
+})
+
+
 //search
 app.get('/search/:target/:search',(req,res)=>{
     const {target,search} = req.params;
     queries.search[target](search,res,db)
 })
-
 // old search (used in adder page)
 // app.get('/search/artist',(req,res)=> {
 //     queries.searchArtist(req,res,db)
@@ -81,38 +92,55 @@ app.get('/:target', (req, res) => {
     const page =Math.abs(req.query.page)||0;
     const {target} =req.params;
     queries.getAll[target](page,res,db)
-});
+  });
 // add song to playlist
 app.post('/songToPlaylist',(req,res) => {
-    const {song,playlist}= req.query;
-    queries.addToPlaylist(song,playlist,res,db)
+  const {song,playlist}= req.query;
+  queries.addToPlaylist(song,playlist,res,db)
 })
+
+app.post('/migrate/artists',(req,res)=>{
+  db.query(
+    `SELECT
+    artist_id, name, img 
+    from artists
+    `,
+    (err,results,fields) => {
+        if(err){
+            throw err
+        }
+        // res.json(results)
+        elastic.migrateArtists(results,res)
+        
+    }
+)})
+
 // add an entry
 app.post('/:target',(req,res) => {
     queries.addNew(req,res,db)
-})
+  })
 //update an "un/like"
 app.put('/setLike/:target/:id',(req,res) => {
-    let data= [
-        {created_at:(new Date),is_liked:req.body.like},{is_liked:req.body.like}]
-    const {target,id} = req.params
-    queries.Like[target](id,data,res,db)
+  let data= [
+      {created_at:(new Date),is_liked:req.body.like},{is_liked:req.body.like}]
+      const {target,id} = req.params
+  queries.Like[target](id,data,res,db)
 })
 //update an entry
 app.put('/:target/:id',(req,res) => {
     queries.updateById(req,res,)
-})
+  })
 //delete an entry
 app.delete('/:target/:id',(req,res) => {
     queries.deleteById(req,res,db)
-})
-
+  })
+  
 app.get('/',(req,res)=>{
-    console.log('nothing caught')
+  console.log('nothing caught')
     // res.send()
-})
+  })
 
-const port = process.env.PORT
-app.listen(port,()=>{
+  const port = process.env.PORT
+  app.listen(port,()=>{
         console.log(`server running on port ${port}`)
-})
+      })
