@@ -1,5 +1,6 @@
 require('dotenv').config()
 const { Client } = require('@elastic/elasticsearch')
+const { artist } = require('../queries/getById')
 const client = new Client({ 
   cloud: {
   id: process.env.ELASTIC_ID,
@@ -9,13 +10,13 @@ auth: {
   password: process.env.ELASTIC_PW
 }})
 
-async function migrateArtists (results,res) {
+const elastic = {}
+elastic.migrateArtists = async function (results) {
   const data = results.flatMap(doc => {
     doc.uploadedAt = new Date()
     return [{ index: { _index: 'artists' } }, doc]
   })
   try{
-
     await client.indices.create({
       index: 'artists',
       body: {
@@ -31,54 +32,131 @@ async function migrateArtists (results,res) {
     }, { ignore: [400] })
     
     const { body: bulkResponse } = await client.bulk({ refresh: true, body:data })
-    
     if (bulkResponse.errors) {
-      const erroredDocuments = []
-      // The items array has the same order of the dataset we just indexed.
-      // The presence of the `error` key indicates that the operation
-      // that we did for the document has failed.
-      bulkResponse.items.forEach((action, i) => {
-        const operation = Object.keys(action)[0]
-        if (action[operation].error) {
-          erroredDocuments.push({
-            // If the status is 429 it means that you can retry the document,
-            // otherwise it's very likely a mapping error, and you should
-            // fix the document before to try it again.
-            status: action[operation].status,
-            error: action[operation].error,
-            operation: body[i * 2],
-            document: body[i * 2 + 1]
-          })
-        }
-      })
-      res.status(500).json(erroredDocuments)
+      throw bulkResponse.errors
     }
     const { body: count } = await client.count({ index: 'artists' })
-    res.send(count)
+    return count
   }catch(error){
-    console.error(error)
+    console.error(error);
+  }
+}
+    
+elastic.migrateAlbums = async function (results) {
+  const data = results.flatMap(doc => {
+    doc.uploadedAt = new Date()
+    return [{ index: { _index: 'albums' } }, doc]
+  })
+  try{
+    await client.indices.create({
+      index: 'albums',
+      body: {
+        mappings: {
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'text' },
+            artist: { type: 'text' },
+            img: { type: 'text' },
+            uploadedAt: { type: 'date' }
+          }
+        }
+      }
+    }, { ignore: [400] })
+   
+    const { body: bulkResponse } = await client.bulk({ refresh: true, body:data })
+    if (bulkResponse.errors) {
+      throw bulkResponse.errors
+    }
+
+    const { body: count } = await client.count({ index: 'albums' })
+    
+    return count
+
+  }catch(error){
+    console.error(error);
   }
 }
 
-async function getResults (index,res) {
+elastic.migrateSongs = async function (results) {
+  const data = results.flatMap(doc => {
+    doc.uploadedAt = new Date()
+    return [{ index: { _index: 'songs' } }, doc]
+  })
+  try{
+    await client.indices.create({
+      index: 'songs',
+      body: {
+        mappings: {
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'text' },
+            artist: { type: 'text' },
+            img: { type: 'text' },
+            uploadedAt: { type: 'date' }
+          }
+        }
+      }
+    }, { ignore: [400] })
+   
+    const { body: bulkResponse } = await client.bulk({ refresh: true, body:data })
+    if (bulkResponse.errors) {
+      throw bulkResponse.errors
+    }
+
+    const { body: count } = await client.count({ index: 'songs' })
+    
+    return count
+
+  }catch(error){
+    console.error(error);
+  }
+}
+    
+
+elastic.search = async function  (searchQuery,index) {
   const { body } = await client.search({
     index: index,
+    size:100,
     body: {
       query: {
-        match: {
-          name: 'billie'
+        wildcard: {
+          artist: {
+            // value: "b",
+            value: `*${searchQuery}*`,
+            boost: 1.0,
+            rewrite: "constant_score",
+          },
         }
       }
     }
   })
-
-  res.json(body.hits.hits.map(hit=>hit._source))
+  return body.hits.hits.map(hit=>hit._source)
 }
 
-  module.exports ={
-    migrateArtists,
-    getResults
+elastic.clearIndex =  async function (index){
+  try{
+    response = await client.deleteByQuery({
+      index:index,
+      body:{
+        query: {
+          "match_all": {}
+          // wildcard: {
+          //   name: {
+          //     value: "*",
+          //     boost: 1.0,
+          //     rewrite: "constant_score"
+          //   },
+          // }
+        }
+      }
+    })
+    return response
+  }catch(err){
+    console.error('clear',err)
   }
+}
+
+  module.exports =elastic
 // client.bulk({
   //   index: string,
   //   type: string,

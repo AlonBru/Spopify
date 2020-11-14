@@ -1,5 +1,6 @@
 const artist = (page, res,db) => {
-    db.query(
+  const all   
+  db.query(
         `SELECT * FROM artists 
         LIMIT 20 OFFSET ${page*20}
         `,

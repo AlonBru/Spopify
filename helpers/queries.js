@@ -1,3 +1,22 @@
+const mysql = require('mysql');
+const dbConfig = {
+  connectionLimit: 10, // default 10
+  host: "localhost",
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  multipleStatements: true
+};
+const pool = mysql.createPool(dbConfig)
+const query = (sql) => {
+  return new Promise((resolve, reject) => {
+    pool.query(sql, (err, result, fields) => {
+      if (err) reject(err);
+      resolve(result);
+    });
+  });
+};
+
 const getById = require('../queries/getById')
 const getAll = require('../queries/getAll')
 const getTop = require('../queries/getTop')
@@ -7,23 +26,48 @@ const Like = require('../queries/Like')
 const getByAlbum = require('../queries/getByAlbum')
 const getByPlaylist = require('../queries/getByPlaylist')
 
-const addToPlaylist = (song,playlist,res,db) => {
+const getAll = {
+  artists : async (req) => {
+    const sql = `SELECT
+    artist_id as id, name, img 
+    from artists
+    `
+    return query(sql)
+    
+  },
+  albums : async (req) => {
+    const sql = `SELECT
+    al.album_id as id, al.name, al.cover_img, ar.name AS artist
+    FROM albums AS al
+    Join artists AS ar
+    ON al.artist = ar.artist_id
+    `
+    return query(sql)
+  },
+  songs : async (req) => {
+    const sql = `SELECT
+    s.song_id as id, s.name, al.cover_img, ar.name AS artist
+    FROM songs AS s
+    Join artists AS ar
+    ON s.artist = ar.artist_id
+    Join albums AS al
+    ON s.album = al.album_id
+    `
+    return query(sql)
+  }
+}
+    
+const addToPlaylist = (song,playlist) => {
     console.log(song,playlist)
-    db.query(
+    return query(
         `
         INSERT INTO songs_by_playlist
         (song_id,
         playlist_id)
         VALUES
         (?,?);
-        `,[song,playlist],(err, results, fields) => {
-            if (err) {
-                console.error(err)
-                res.send(err.message)
-                return
-            };
-            res.send('success');
-          })
+        `)
+        
     
 }
 
@@ -140,6 +184,7 @@ const deleteById = (req,res,db) => {
             res.send(`deleted ${target} with id ${id}`)
     })
 }
+
 module.exports ={
     getAll,
     getById,
