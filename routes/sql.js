@@ -67,9 +67,16 @@ queries.addToPlaylist(song,playlist,res,db)
 
 
 // add an entry
-router.post('/:target',(req,res) => {
-  queries.addNew(req,res,db)
+router.post('/:index',(req,res) => {
+  const {index} = req.params
+  const {body} = req
+  body.uploaded_at = new Date()
+  queries.addNew(index,body)
+  .then(()=>{
+    res.redirect(307,`../../elastic/${index}`)
+  })
 })
+
 //update an "un/like"
 router.put('/setLike/:target/:id',(req,res) => {
 let data= [

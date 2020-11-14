@@ -1,6 +1,5 @@
 require('dotenv').config()
 const { Client } = require('@elastic/elasticsearch')
-const { artist } = require('../queries/getById')
 const client = new Client({ 
   cloud: {
   id: process.env.ELASTIC_ID,
@@ -11,6 +10,7 @@ auth: {
 }})
 
 const elastic = {}
+
 elastic.migrateArtists = async function (results) {
   const data = results.flatMap(doc => {
     doc.uploadedAt = new Date()
@@ -111,8 +111,18 @@ elastic.migrateSongs = async function (results) {
     console.error(error);
   }
 }
-elastic.create = () => {
-  
+
+elastic.create = async (index,data) => {
+ try{
+
+   await client.index({
+     index: index,
+     refresh: 'true',
+     body: data
+    })
+  }catch(error){
+    console.error(error)
+  }
 }
 
 elastic.migratePlaylists = async function (results) {

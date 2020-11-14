@@ -9,10 +9,11 @@ const dbConfig = {
 };
 const pool = mysql.createPool(dbConfig)
 
-const query = (sql) => {
+const query = (sql,data) => {
   return new Promise( (resolve, reject) => {
     pool.query(
       sql,
+      data,
       (err, result) => {
       if (err) reject(err)
       resolve(result);
@@ -28,46 +29,53 @@ const getByArtist = require('../queries/getByArtist')
 // const search = require('../queries/search')
 const Like = require('../queries/Like')
 const getByAlbum = require('../queries/getByAlbum')
-const getByPlaylist = require('../queries/getByPlaylist')
+const getByPlaylist = require('../queries/getByPlaylist');
+const elastic = require('./elastic');
 
 const db = {}
 
-db.getAll = {
+const elasticQuery = {
+  artist: `SELECT
+  artist_id as id, name, img 
+  from artists
+  `,
+  album:`SELECT
+  al.album_id as id, al.name, al.cover_img as img, ar.name AS artist
+  FROM albums AS al
+  Join artists AS ar
+  ON al.artist = ar.artist_id
+  `,
+  song : `SELECT
+  s.song_id as id, s.name,
+  cover_img as img,
+  ar.name AS artist
+  FROM songs AS s
+  Join artists AS ar
+  ON s.artist = ar.artist_id
+  LEFT Join albums AS al
+  ON s.album = al.album_id
+  `,
+  playlist: `SELECT
+  playlist_id as id, p.name, cover_img as img, u.username AS user
+  FROM playlists AS p
+  Join users AS u
+  ON p.created_by = u.user_id
+  `
+ 
+}
+
+db.getSearchData = {
   artists : () => {
-    const sql = `SELECT
-    artist_id as id, name, img 
-    from artists
-    `
-    return query(sql)
+    return query(elasticQuery.artist)
   },
   albums : () => {
-    const sql = `SELECT
-    al.album_id as id, al.name, al.cover_img, ar.name AS artist
-    FROM albums AS al
-    Join artists AS ar
-    ON al.artist = ar.artist_id
-    `
-    return query(sql)
+    return query(elasticQuery.album)
   },
   songs : () => {
-    const sql = `SELECT
-    s.song_id as id, s.name, al.cover_img, ar.name AS artist
-    FROM songs AS s
-    Join artists AS ar
-    ON s.artist = ar.artist_id
-    LEFT Join albums AS al
-    ON s.album = al.album_id
-    `
-    return query(sql)
+   return query(elasticQuery.song)
   },
   playlists : () => {
-    const sql = `SELECT
-    playlist_id as id, p.name, cover_img as img, u.username AS user
-    FROM playlists AS p
-    Join users AS u
-    ON p.created_by = u.user_id
-    `
-    return query(sql)
+   return query(elasticQuery.playlist)
   }
 }
 
@@ -155,7 +163,51 @@ db.search = {
     `
     return query(sql)
   }
-} 
+}
+db.findItem = {
+  song: ({name,youtube_link,artist}) => {
+  const sql = elasticQuery.song+`
+    WHERE
+    s.name = '${name}' 
+    AND
+    youtube_link = '${youtube_link}'
+    AND
+    s.artist = '${artist}'
+  `
+  return query(sql)
+  },
+  album: ({name,cover_img,artist}) => {
+  const sql = elasticQuery.album+`
+    WHERE
+    al.name = '${name}' 
+    AND
+    cover_img = '${cover_img}'
+    AND
+    al.artist = '${artist}'
+  `
+  return query(sql)
+  },
+  artist: ({name,img}) => {
+  const sql = elasticQuery.artist+`
+    WHERE
+    name = '${name}' 
+    AND
+    img = '${img}'
+  `
+  return query(sql)
+  },
+  playlist: ({name,cover_img,created_by}) => {
+  const sql = elasticQuery.playlist+`
+    WHERE
+    name = '${name}' 
+    AND
+    cover_img = '${cover_img}'
+    AND
+    created_by = '${created_by}'
+  `
+  return query(sql)
+  }
+}
 
 // db.addToPlaylist = (song,playlist) => {
 //     console.log(song,playlist)
@@ -246,23 +298,14 @@ db.searchAll = (req, res,db) => {
         res.send(results);
     }); 
 }
-db.addNew =(req, res,db) => {
-    const {target} = req.params
-    const {body}= req
-    body.uploaded_at = new Date
-    db.query(
-        `INSERT INTO \`${target}s\` 
-        set ?`,
-        [body],
-        (err, results, fields) => {
-            if (err) {
-                console.error(err.message)
-                res.send({status:'error',message:err.message});
-                return
-            };
-        console.log(`added ${target} '${body.name}'`)
-        res.send({status:'success',message:body.name+' added!'});
-    }); 
+db.addNew =(index,body) => {
+
+  const sql = `INSERT INTO \`${index}s\` 
+  set ?`
+  return query(
+      sql,
+      [body]
+      ); 
 }
 db.updateById = (req,res,db) => {
     const {id,target} =req.params;
