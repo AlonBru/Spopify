@@ -1,7 +1,7 @@
 const express = require('express');
 require('dotenv').config()
 const elastic = require('./routes/elastic');
-const migrate = require('./routes/migrate');
+const migrate = require('./routes/elastic');
 const sql = require('./routes/sql');
 const app = express();
 
@@ -17,8 +17,7 @@ app.get('/ping',(req,res) => {
     res.send({status:'success',message:'pong!'})
 })
 
-app.use('/search',elastic)
-app.use('/migrate',migrate)
+app.use('/elastic',elastic)
 app.use('/api',sql)
 
 module.exports = app

@@ -111,6 +111,44 @@ elastic.migrateSongs = async function (results) {
     console.error(error);
   }
 }
+elastic.create = () => {
+  
+}
+
+elastic.migratePlaylists = async function (results) {
+  const data = results.flatMap(doc => {
+    doc.uploadedAt = new Date()
+    return [{ index: { _index: 'playlists' } }, doc]
+  })
+  try{
+    await client.indices.create({
+      index: 'playlists',
+      body: {
+        mappings: {
+          properties: {
+            id: { type: 'integer' },
+            name: { type: 'text' },
+            artist: { type: 'text' },
+            img: { type: 'text' },
+            uploadedAt: { type: 'date' }
+          }
+        }
+      }
+    }, { ignore: [400] })
+   
+    const { body: bulkResponse } = await client.bulk({ refresh: true, body:data })
+    if (bulkResponse.errors) {
+      throw bulkResponse.errors
+    }
+
+    const { body: count } = await client.count({ index: 'playlists' })
+    
+    return count
+
+  }catch(error){
+    console.error(error);
+  }
+}
     
 
 elastic.search = async function  (searchQuery,index) {
@@ -120,7 +158,7 @@ elastic.search = async function  (searchQuery,index) {
     body: {
       query: {
         wildcard: {
-          artist: {
+          name: {
             // value: "b",
             value: `*${searchQuery}*`,
             boost: 1.0,
@@ -131,6 +169,18 @@ elastic.search = async function  (searchQuery,index) {
     }
   })
   return body.hits.hits.map(hit=>hit._source)
+}
+
+elastic.searchAll = function  (searchQuery) {
+  const indices = ['artists','albums','songs','playlists']
+  return {
+    indices,
+    results:Promise.all(
+      indices.map(
+        index=>elastic.search(searchQuery,index) 
+      ) 
+    )
+  }
 }
 
 elastic.clearIndex =  async function (index){
@@ -157,17 +207,3 @@ elastic.clearIndex =  async function (index){
 }
 
   module.exports =elastic
-// client.bulk({
-  //   index: string,
-  //   type: string,
-  //   wait_for_active_shards: string,
-//   refresh: 'true' | 'false' | 'wait_for',
-//   routing: string,
-//   timeout: string,
-//   _source: string | string[],
-//   _source_excludes: string | string[],
-//   _source_includes: string | string[],
-//   pipeline: string,
-//   require_alias: boolean,
-//   body: object
-// })

@@ -1,22 +1,25 @@
 const router = require('express').Router()
-const elastic = require('../helpers/elastic');
-const {getById} = require('../helpers/queries');
+const queries = require('../helpers/queries');
+const {create} = require('../helpers/elastic');
 
+router.get('/ping',(req,res)=>{
+  res.send('pomg')
+})
 //search
-router.get('/search/:target/:search',(req,res)=>{
-  const {target,search} = req.params;
-  queries.search[target](search,res,db)
+router.get('/search',(req,res)=>{
+  const {search} = req.query;
+  queries.search['artist'](search)
 })
 
 // old search (used in adder page)
 // router.get('/search/artist',(req,res)=> {
 //     queries.searchArtist(req,res,db)
 // })
-//get the column names 
 
-router.get('/fields/:target', (req,res) => {
-  queries.getFields(req,res,db)
-})
+// //get the column names 
+// router.get('/fields/:target', (req,res) => {
+//   queries.getFields(req,res,db)
+// })
 
 // get target by (e.g songs by artist) 
 router.get('/getByArtist/:target', (req,res) => {
@@ -55,6 +58,7 @@ router.get('/:target/:id', (req, res) => {
 //     const {target} =req.params;
 //     queries.getAll[target](page,res,db)
 //   });
+
 // add song to playlist
 router.post('/songToPlaylist',(req,res) => {
 const {song,playlist}= req.query;
