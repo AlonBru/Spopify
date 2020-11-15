@@ -391,7 +391,7 @@ db.getTop ={
       ON ar.artist_id = al.artist
     GROUP BY al.name
       ORDER BY play_count DESC
-      LIMIT 20 OFFSET ${page*20};`,
+      LIMIT 20 OFFSET ${page*20};`
     return query(sql)
   },
   artist : (page) => {
@@ -452,24 +452,17 @@ db.addNew =(index,body) => {
 }
 
 //PUT
-db.updateById = (id,target,body) => {    // receives an array of strings ['column=value'] 
+db.updateById = (target,id,body) => {    // receives an array of strings ['column=value'] 
   const changes = body
-  .map(change=>{
-    let escaped = change
-    .split('=')
-    escaped.splice(1,0,"='")
-    escaped.push("'")
-    return escaped.join('')
-  })
   .join(',')
   const sql =`UPDATE
-  \`${ target+'s' }\` SET ? 
+  \`${ target+'s' }\` SET ${changes} 
   WHERE ${target}_id='${id}' `
-  return query(sql,[changes])
+  return query(sql)
 }
+
 //DELETE
 db.deleteById = (id,target) => {
-    const {id,target} =req.params;
     db.query(
         `DELETE FROM \`${target}s\` 
         WHERE \`(${target}_id\` = '${id}');`,

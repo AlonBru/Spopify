@@ -98,12 +98,16 @@ queries.Like[target](id,data,res,db)
 //update an entry
 router.put('/:index/:id',(req,res) => {
   const {index,id} = req.params
-  const {body} = req 
-  queries.updateById(index,id)
-  .then(()=>{res,send(`updated ${index} ${id}`)})
+  const {body} = req
+  const data = Object.keys(body).map(key=>`${key}='${body[key]}'`)
+  
+  queries.updateById(index,id,data)
+  .then(()=>{res.send(`updated ${index} ${id},
+  fields: ${JSON.stringify(body,null,2)}`)})
   .catch(console.error)
   //TODO: add Elastic update
 })
+
 //delete an entry
 router.delete('/:target/:id',(req,res) => {
   queries.deleteById(req,res,db)
