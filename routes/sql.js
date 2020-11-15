@@ -49,10 +49,10 @@ router.get('/top_:target',(req,res) => {
 })
 
 //get by id
-router.get('/:target/:id', (req, res) => {
-  const {target, id} = req.params;
-  console.log('getById',target,id)
-  queries.getById[target](id,res,db)
+router.get('/:index/:id', (req, res) => {
+  const {index, id} = req.params;
+  queries.getById[index](id)
+  .then(results=>{res.json(results)})
 });
 
 // get all of target, 20 at a page (define a query ?page=0,1,2,3 for the next 20)
