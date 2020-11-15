@@ -25,15 +25,15 @@ const query = (sql,data) => {
 const getById = require('../queries/getById')
 // const getAll = require('../queries/getAll')
 const getTop = require('../queries/getTop')
-const getByArtist = require('../queries/getByArtist')
+// const getByArtist = require('../queries/getByArtist')
 // const search = require('../queries/search')
 const Like = require('../queries/Like')
-const getByAlbum = require('../queries/getByAlbum')
-const getByPlaylist = require('../queries/getByPlaylist');
+// const getByAlbum = require('../queries/getByAlbum')
+// const getByPlaylist = require('../queries/getByPlaylist');
 const elastic = require('./elastic');
 
 const db = {}
-
+//Elastic
 const elasticQuery = {
   artist: `SELECT
   artist_id as id, name, img 
@@ -219,9 +219,75 @@ db.findItem = {
 //         VALUES
 //         (?,?);
 //         `)
-        
-    
-// }
+
+//geyBy
+db.getByArtist = {
+  songs : (id,page) => {
+    const sql =`SELECT
+          s.song_id,s.name AS title, s.length,
+          cover_img AS album_cover, al.album_id,
+          SUM(i.play_count) AS plays, i.is_liked
+          FROM songs AS s
+        LEFT JOIN interactions as i
+          on s.song_id = i.song_id AND user_id=1
+        LEFT JOIN albums as al
+          on s.album = al.album_id
+        WHERE s.artist = ' ${id} '
+          GROUP BY s.song_id
+          Order BY plays DESC
+          LIMIT 20;
+        `
+        return query(sql)
+},
+albums : (id,page) => {
+  const sql =`SELECT *
+  FROM albums 
+  WHERE artist = '${id}'
+  Order BY released DESC;
+  `
+  return query(sql) 
+},
+playlist : (id, page) => {
+// unimplemented
+}
+}
+db.getByAlbum = (id) => {
+  const sql = `SELECT
+      s.song_id, s.track_number, s.name AS title, s.length,
+      SUM(i.play_count) AS plays, i.is_liked
+      FROM songs AS s
+      LEFT JOIN interactions as i
+      on s.song_id = i.song_id AND user_id=1
+      WHERE s.album = '${id}'
+      GROUP BY s.song_id
+      Order BY s.track_number ASC;
+      `
+  return query(sql)
+} 
+db.getByPlaylist = (id,res,db) => {
+  const sql = `SELECT
+  s.song_id, s.name AS title, s.length,
+  al.cover_img AS img, al.name AS album_name,
+  ar.name AS artist_name,
+  SUM(i.play_count) AS plays, i.is_liked,
+  SUM(TIME_TO_SEC(s.length)) AS total_length        
+  FROM playlists AS p 
+  LEFT JOIN songs_by_playlist as sp
+  on p.playlist_id = sp.playlist_id
+  JOIN songs AS s
+  ON s.song_id = sp.song_id
+  LEFT JOIN albums AS al
+  ON al.album_id = s.album
+  JOIN artists  ar
+  ON ar.artist_id = s.artist
+  LEFT JOIN interactions AS i
+  ON s.song_id= i.song_id
+  WHERE p.playlist_id = '${id}'
+  GROUP BY s.song_id
+  `
+  query(sql)
+}
+
 
 db.getFields =(req, res,db) => {
     const {target} = req.params

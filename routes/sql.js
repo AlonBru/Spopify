@@ -22,20 +22,23 @@ router.get('/search',(req,res)=>{
 // })
 
 // get target by (e.g songs by artist) 
-router.get('/getByArtist/:target', (req,res) => {
-  const {target} = req.params
+router.get('/getByArtist/:index', (req,res) => {
+  const {index} = req.params
   const {page,id} = req.query
-  queries.getByArtist[target](id,page,res,db)
+  queries.getByArtist[index](id,page)
+  .then(results=>{res.json(results)})
 })
+
 router.get('/getByAlbum/songs', (req,res) => {
   const {id} = req.query
-  console.log('getByAlbum', id)
-  queries.getByAlbum(id,res,db)
+  queries.getByAlbum(id)
+  .then(results=>{res.json(results)})
 })
+
 router.get('/getByPlaylist/songs', (req,res) => {
   const {id} = req.query
-  console.log('getByPlaylist', id)
-  queries.getByPlaylist(id,res,db)
+  queries.getByPlaylist(id)
+  .then(results=>{res.json(results)})
 })
 
 // get top 20 of target (define a query ?page=0,1,2,3 for the next 20)

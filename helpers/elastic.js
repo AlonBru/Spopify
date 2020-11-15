@@ -172,7 +172,7 @@ elastic.search = async function  (searchQuery,index) {
             // value: "b",
             value: `*${searchQuery}*`,
             boost: 1.0,
-            rewrite: "constant_score",
+            rewrite: "constant_score"
           },
         }
       }
