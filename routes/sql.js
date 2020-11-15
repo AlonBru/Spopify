@@ -27,18 +27,22 @@ router.get('/getByArtist/:index', (req,res) => {
   const {page,id} = req.query
   queries.getByArtist[index](id,page)
   .then(results=>{res.json(results)})
+  .catch(console.error)
 })
 
 router.get('/getByAlbum/songs', (req,res) => {
   const {id} = req.query
   queries.getByAlbum(id)
   .then(results=>{res.json(results)})
+  .catch(console.error)
+
 })
 
 router.get('/getByPlaylist/songs', (req,res) => {
   const {id} = req.query
   queries.getByPlaylist(id)
   .then(results=>{res.json(results)})
+  .catch(console.error)
 })
 
 // get top 20 of target (define a query ?page=0,1,2,3 for the next 20)
@@ -47,6 +51,7 @@ router.get('/top_:target',(req,res) => {
   const page = Math.abs(req.query.page)||0;
   queries.getTop[target](page)
   .then(results=>{res.json(results)})
+  .catch(console.error)
 })
 
 //get by id
@@ -54,6 +59,7 @@ router.get('/:index/:id', (req, res) => {
   const {index, id} = req.params;
   queries.getById[index](id)
   .then(results=>{res.json(results)})
+  .catch(console.error)
 });
 
 // get all of target, 20 at a page (define a query ?page=0,1,2,3 for the next 20)
@@ -79,6 +85,7 @@ router.post('/:index',(req,res) => {
   .then(()=>{
     res.redirect(307,`../../elastic/${index}`)
   })
+  .catch(console.error)
 })
 
 //update an "un/like"
@@ -89,12 +96,18 @@ let data= [
 queries.Like[target](id,data,res,db)
 })
 //update an entry
-router.put('/:target/:id',(req,res) => {
-  queries.updateById(req,res,)
+router.put('/:index/:id',(req,res) => {
+  const {index,id} = req.params
+  const {body} = req 
+  queries.updateById(index,id)
+  .then(()=>{res,send(`updated ${index} ${id}`)})
+  .catch(console.error)
+  //TODO: add Elastic update
 })
 //delete an entry
 router.delete('/:target/:id',(req,res) => {
   queries.deleteById(req,res,db)
+  //TODO: add Elastic update
 })
 
 

@@ -426,11 +426,9 @@ db.getTop ={
     return query(sql)
   }
 }
-
-
 db.getFields =(req, res,db) => {
-    const {target} = req.params
-    db.query(
+  const {target} = req.params
+  db.query(
         `SELECT * FROM ${target}s WHERE ${target}_id=1`,
      (err, results, fields) => {
         if (err) {
@@ -441,71 +439,10 @@ db.getFields =(req, res,db) => {
         console.log(`got fields for ${target}s`)
         res.send(fields.map(column=>column.name));
       }); 
-    }
-
-// db.getAlbum =(req, res) => {
-//     const {id} = req.params
-//     const sql = `SELECT * FROM albums WHERE album_id=${id}`
-//     query(sql)
-//     .then(
-
-//       (err, album, fields) => {
-//         if (err) {
-//           console.error(err)
-//           console.log('error from getAlbum')
-//           res.send(err.message)
-//           return;
-//         };
-//         db.query(
-//           `select * from songs
-//           where songs.album = ${album[0].album_id}`, (err,songs,fields)=>{
-//             if (err) {
-//               console.error(err)
-//               console.log('error from getAlbum')
-//               res.send(err.message);
-//               return
-//             };
-//             res.json({album,songs})
-//           }
-//           )
-//           )
-//         }); 
-// }
-db.searchArtist =(req, res,db) => {
-    const target = 'artist'
-    const {search} = req.query
-    db.query(`SELECT artist_id AS id,name, img 
-    FROM \`${target}\`s 
-    WHERE name LIKE '%${search}%'`,
-    (err, results, fields) => {
-        if (err) {
-            console.error(err)
-            console.log('error from searchArtist')
-            res.send(err.message);
-            return
-        };
-        res.send(results);
-    }); 
-}
-db.searchAll = (req, res,db) => {
-    const target = 'artist'
-    const {search} = req.query
-    db.query(`SELECT artist_id AS id,name, img 
-    FROM ${target}s 
-    WHERE name LIKE '%${search}%'`,
-    (err, results, fields) => {
-        if (err) {
-            console.error(err)
-            console.log('error from searchAll')
-            res.send(err.message);
-            return
-        };
-        res.send(results);
-    }); 
 }
 
+//POST
 db.addNew =(index,body) => {
-
   const sql = `INSERT INTO \`${index}s\` 
   set ?`
   return query(
@@ -513,21 +450,25 @@ db.addNew =(index,body) => {
       [body]
       ); 
 }
-db.updateById = (req,res,db) => {
-    const {id,target} =req.params;
-    const {body} =req;
-    // receives an array of strings ['column=value'] 
-    body.forEach(ele=>{
-    db.query(
-        `UPDATE \`${target}\` SET ? 
-        WHERE artist_id='${id}' `,
-        [ele],(err,results,fields)=>{
-            if(err){throw err}
-            res.send('updated'+id)
-        })
-    })
+
+//PUT
+db.updateById = (id,target,body) => {    // receives an array of strings ['column=value'] 
+  const changes = body
+  .map(change=>{
+    let escaped = change
+    .split('=')
+    escaped.splice(1,0,"='")
+    escaped.push("'")
+    return escaped.join('')
+  })
+  .join(',')
+  const sql =`UPDATE
+  \`${ target+'s' }\` SET ? 
+  WHERE ${target}_id='${id}' `
+  return query(sql,[changes])
 }
-db.deleteById = (req,res,db) => {
+//DELETE
+db.deleteById = (id,target) => {
     const {id,target} =req.params;
     db.query(
         `DELETE FROM \`${target}s\` 
@@ -537,5 +478,63 @@ db.deleteById = (req,res,db) => {
             res.send(`deleted ${target} with id ${id}`)
     })
 }
+//ADDER
+db.searchArtist =(req, res,db) => {
+  const target = 'artist'
+  const {search} = req.query
+  db.query(`SELECT artist_id AS id,name, img 
+  FROM \`${target}\`s 
+  WHERE name LIKE '%${search}%'`,
+  (err, results, fields) => {
+      if (err) {
+          console.error(err)
+          console.log('error from searchArtist')
+          res.send(err.message);
+          return
+      };
+      res.send(results);
+  }); 
+}
+db.searchAll = (req, res,db) => {
+  const target = 'artist'
+  const {search} = req.query
+  db.query(`SELECT artist_id AS id,name, img 
+  FROM ${target}s 
+  WHERE name LIKE '%${search}%'`,
+  (err, results, fields) => {
+      if (err) {
+          console.error(err)
+          console.log('error from searchAll')
+          res.send(err.message);
+          return
+      };
+      res.send(results);
+  }); 
+}
+db.getAlbum =(req, res) => {
+    const {id} = req.params
+    const sql = `SELECT * FROM albums WHERE album_id=${id}`
+    query(sql)
+    .then(
 
+      (err, album, fields) => {
+        if (err) {
+          console.error(err)
+          console.log('error from getAlbum')
+          res.send(err.message)
+          return;
+        };
+        db.query(
+          `select * from songs
+          where songs.album = ${album[0].album_id}`, (err,songs,fields)=>{
+            if (err) {
+              console.error(err)
+              console.log('error from getAlbum')
+              res.send(err.message);
+              return
+            };
+            res.json({album,songs})
+          })
+        }); 
+}
 module.exports =db
