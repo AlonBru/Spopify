@@ -45,7 +45,8 @@ router.get('/getByPlaylist/songs', (req,res) => {
 router.get('/top_:target',(req,res) => {
   const {target} = req.params;
   const page = Math.abs(req.query.page)||0;
-  queries.getTop[target](page,res,db)
+  queries.getTop[target](page)
+  .then(results=>{res.json(results)})
 })
 
 //get by id
