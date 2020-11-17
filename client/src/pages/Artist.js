@@ -21,7 +21,7 @@ function Artist({ match, location }) {
   useEffect(getArtist, []);
   console.log(match);
   function getArtist() {
-    axios.get(`/artist/${match.params.id}`)
+    axios.get(`/api/artist/${match.params.id}`)
       .then(({ data }) => {
         if (Array.isArray(data)) { data = data[0]; }
         setArtist(data);
@@ -33,7 +33,7 @@ function Artist({ match, location }) {
   }
   function getAlbums(artist) {
     console.log('arts', artist);
-    axios.get(`/getByArtist/albums?id=${artist.artist_id}`)
+    axios.get(`/api/getByArtist/albums?id=${artist.artist_id}`)
       .then(({ data }) => {
         setAlbums(data);
         console.log('albs', data);
@@ -41,7 +41,7 @@ function Artist({ match, location }) {
       .catch((e) => console.error(e));
   }
   function getSongs(artist) {
-    axios.get(`/getByArtist/songs?id=${artist.artist_id}`)
+    axios.get(`/api/getByArtist/songs?id=${artist.artist_id}`)
       .then(({ data }) => {
         setSongs(data);
       })

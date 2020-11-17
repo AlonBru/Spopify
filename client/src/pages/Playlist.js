@@ -14,7 +14,7 @@ function Playlist({ match }) {
   useEffect(getPlaylist, []);
   const location = useLocation();
   function getPlaylist() {
-    axios.get(`/playlist/${match.params.id}`)
+    axios.get(`/api/playlist/${match.params.id}`)
       .then(({ data }) => {
         if (Array.isArray(data)) { data = data[0]; }
         console.log(data);
@@ -24,7 +24,7 @@ function Playlist({ match }) {
       .catch((e) => console.error(e));
   }
   function getSongs(playlist) {
-    axios.get(`/getByPlaylist/songs?id=${playlist.playlist_id}`)
+    axios.get(`/api/getByPlaylist/songs?id=${playlist.playlist_id}`)
       .then(({ data }) => {
         console.log(data);
         setSongs(data);

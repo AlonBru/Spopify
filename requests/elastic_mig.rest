@@ -1,0 +1,41 @@
+post http://localhost:8000/elastic/migrate/artists
+###
+post http://localhost:8000/elastic/migrate/albums
+###
+post http://localhost:8000/elastic/migrate/songs
+###
+post http://localhost:8000/elastic/migrate/playlists
+###
+post http://localhost:8000/api/album
+Content-Type: application/json
+
+{
+  "artist":"13",
+   "name":"Once More, With Feeling",
+   "cover_img":"https://i.scdn.co/image/ab67616d0000b273680b26fdf4410d3289a15727",
+   "released":"2002-09-24"
+}
+###
+put http://localhost:8000/api/album/13
+Content-Type: application/json
+
+{
+  "artist":"13",
+   "name":"Once More, With Feeling",
+   "cover_img":"https://i.scdn.co/image/ab67616d0000b273680b26fdf4410d3289a15727",
+   "released":"2002-09-24"
+}
+###
+put http://localhost:8000/api/album/13
+Content-Type: application/json
+
+{
+  "artist":"7",
+   "name":"test",
+   "released":"2001-01-01"
+}
+###
+get http://localhost:8000/elastic/all?search=once
+###
+get http://localhost:8000/api/search?search=bil
+###

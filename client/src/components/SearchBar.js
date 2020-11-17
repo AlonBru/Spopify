@@ -9,7 +9,6 @@ function Search() {
   const [open, setOpen] = useState(false);
   const search = (e) => {
     const search = e.target.value;
-    console.log(search);
     setQuery(search);
   };
 
@@ -34,7 +33,8 @@ function Search() {
         placeholder="🔍"
         onChange={search}
         onFocus={() => {
-          setOpen(true);
+          history.push('/search')
+          // setOpen(true);
         }}
       />
       <div

@@ -16,7 +16,7 @@ function Album({ match }) {
   useEffect(getAlbum, []);
   const location = useLocation();
   function getAlbum() {
-    axios.get(`/album/${match.params.id}`)
+    axios.get(`/api/album/${match.params.id}`)
       .then(({ data }) => {
         if (Array.isArray(data)) { data = data[0]; }
         setAlbum(data);
@@ -25,7 +25,7 @@ function Album({ match }) {
       .catch((e) => console.error(e));
   }
   function getSongs(album) {
-    axios.get(`/getByAlbum/songs?id=${album.album_id}`)
+    axios.get(`/api/getByAlbum/songs?id=${album.album_id}`)
       .then(({ data }) => {
         console.log(data);
         setSongs(data);

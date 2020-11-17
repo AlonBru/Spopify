@@ -17,14 +17,14 @@ function Song({ match }) {
   };
 
   function getList() {
-    axios.get(`/getBy${queryObject.from || 'album'}/songs?id=${queryObject.id}`)
+    axios.get(`/api/getBy${queryObject.from || 'album'}/songs?id=${queryObject.id}`)
       .then(({ data }) => {
         setList(data);
       })
       .catch((e) => console.error(e));
   }
   function getSong() {
-    axios.get(`/song/${match.params.id}`)
+    axios.get(`/api/song/${match.params.id}`)
       .then(({ data }) => {
         if (Array.isArray(data)) { data = data[0]; }
         setSong(data);

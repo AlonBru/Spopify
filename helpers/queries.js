@@ -334,7 +334,7 @@ db.getByAlbum = (id) => {
       `
   return query(sql)
 } 
-db.getByPlaylist = (id,res,db) => {
+db.getByPlaylist = (id) => {
   const sql = `SELECT
   s.song_id, s.name AS title, s.length,
   al.cover_img AS img, al.name AS album_name,
@@ -355,7 +355,7 @@ db.getByPlaylist = (id,res,db) => {
   WHERE p.playlist_id = '${id}'
   GROUP BY s.song_id
   `
-  query(sql)
+  return query(sql)
 }
 db.getTop ={
   song: (page) => {
