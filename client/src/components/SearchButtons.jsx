@@ -1,29 +1,41 @@
 import React from 'react' 
-import {useHistory,useLocation} from 'react-router-dom' 
+import {useHistory,useLocation,NavLink} from 'react-router-dom' 
 
 function SearchButtons() {
   const history = useHistory()
   const location = useLocation()
   const goTo = ({target:{value}}) => {
     // console.log(value+ location.search)
-    history.push(`/search${value}${location.search}`)
+    history.push()
   }
   return <div className='searchButtons'>
-  <button value='' onClick={goTo}>
+  find:
+  <NavLink 
+  to={`/search${location.search}`}
+  activeClassName='selected'
+  exact>
     all
-  </button>
-  <button value='/artist' onClick={goTo}>
+  </NavLink>
+  <NavLink 
+  to={`/search/artist${location.search}`} 
+  activeClassName='selected'>
     artists
-  </button>
-  <button value='/album' onClick={goTo}>
+  </NavLink>
+  <NavLink 
+  to={`/search/album${location.search}`} 
+  activeClassName='selected'>
     albums
-  </button>
-  <button value='/song' onClick={goTo}>
+  </NavLink>
+  <NavLink 
+  to={`/search/song${location.search}`} 
+  activeClassName='selected'>
     songs
-  </button>
-  <button value='/playlist' onClick={goTo}>
+  </NavLink>
+  <NavLink 
+  to={`/search/playlist${location.search}`} 
+  activeClassName='selected'>
     playlists
-  </button>
+  </NavLink>
   </div>
 } 
 export default SearchButtons; 

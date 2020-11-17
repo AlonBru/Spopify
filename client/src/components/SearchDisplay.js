@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
+  Link,
   useHistory,useLocation, useParams
 } from 'react-router-dom';
 import axios from 'axios';
@@ -11,9 +12,8 @@ function SearchDisplay({ results, target }) {
   const location = useLocation()
   const goTo = () => {
     // console.log(value+ location.search)
-    history.push(`/search/${target}${location.search}`)
+    history.push()
   }
-  console.log(params)
   return (
     <div className="SearchDisplay">
       <h2>{target+'s'}</h2>
@@ -24,10 +24,10 @@ function SearchDisplay({ results, target }) {
         :<h3>Nothing to show..</h3>
         }
       </div>
-      {!params
-      ?<button className='onlyThis' onClick={goTo}>
-        {`search in ${target}s`}
-      </button>
+      {!params&&results.length>=3
+      ?<Link className='onlyThis' to={`/search/${target}${location.search}`}>
+        {`~ more in ${target}s ~`}
+      </Link>
       :null}
     </div>
     );

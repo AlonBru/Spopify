@@ -34,7 +34,7 @@ main::-webkit-scrollbar{
     display: flex;
     flex-direction: column;
     /* justify-content: space-around; */
-    width:120px;
+    width:100%;
     overflow: hidden;
 }
 #logo{
@@ -47,7 +47,7 @@ main::-webkit-scrollbar{
 }
 #app{
     display: grid;
-    grid-template-columns: 120px 1fr;
+    grid-template-columns: 20% 1fr;
     grid-template-areas: 
     "nav main"
     ;
@@ -77,9 +77,9 @@ main::-webkit-scrollbar{
 }
 .selected{
     background-color: rgb(84, 153, 199);
-    color:darkblue;
+    color:white;
     padding: 3px 6px;
-    border-radius: 20%/50% ;
+    border-radius: 10px ;
 }
 img.artist{
     border-radius:50%;

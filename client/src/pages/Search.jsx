@@ -27,7 +27,7 @@ function Search() {
   useEffect(
     ()=>{
       const delayedSearch = setTimeout(
-        sendSearch,500
+        sendSearch,300
         )
         return ()=>{clearTimeout(delayedSearch)}
       },

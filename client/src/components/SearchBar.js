@@ -40,7 +40,7 @@ function Search() {
       </button>
       <input
         autoComplete="off"
-        id="search"
+        id="searchbar"
         type="search"
         placeholder="🔍"
         onChange={search}
