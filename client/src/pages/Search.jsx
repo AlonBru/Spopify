@@ -1,37 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import {
-  BrowserRouter as Router, Link, Switch, Route, useRouteMatch, useParams,
-} from 'react-router-dom';
+import React, { useState, useEffect,use } from 'react';
+import { useLocation,useParams } from 'react-router-dom';
 import axios from 'axios';
-import Song from './Song'
-import Album from './Album'
-import Artist from './Artist'
-function SearchDisplay() {
-  const [results, setResults] = useState([]);
+import Display from '../components/SearchDisplay'
 
-  // useEffect(() => {
-  //   if (!query.length) {
-  //     setResults([]);
-  //     return;
-  //   }
-  //   axios.get(`/search/${target}/${query}`)
-  //     .then(({ data }) => {
-  //       console.log(data);
-  //       setResults(data);
-  //     })
-  //     .catch((e) => { console.error(e); });
-  // }, [query]);
-  // if (results.length === 0) { return <h3>Nothing to show..</h3>; }
+function Search() {
+  const [results, setResults] = useState();
+  const location = useLocation()
+  const params = useParams()[0].slice(1)
+  
+  useEffect(()=>{
+    const query = location.search.substring(7)
+    const index = params.length
+    ?params
+    :'all'
+    const delayedSearch = setTimeout(
+      ()=>{
+        axios.get(`/elastic/${index}?search=${query}`)
+        .then( ( {data} ) => {
+          setResults(data)
+          console.log(data)
+        })
+      },500
+    )
+    return ()=>{clearTimeout(delayedSearch)}
+  },
+  [location.search , location.pathname]
+  )
+
   return (
-    <Router>
-      <Switch>
-        {/* <Route path="/adder" component={Adder} /> */}
-        <Route path="/search/song" component={Song} />
-        <Route path="/search/album" component={Album} />
-        <Route path="/search/artist" component={Artist} />
-      </Switch>
-  </Router>
+   results
+   ?<div className="search">
+    {params.length
+    ?<Display results={results} target={params}/>
+    :Object.keys(results)
+    .map(key=>{
+    return <Display results={results[key]} target={key}/>
+
+    })}
+   </div>
+   :<h1>
+     Loading...
+   </h1>
   );
 }
 
-export default SearchDisplay;
+export default Search;

@@ -161,10 +161,10 @@ elastic.migratePlaylists = async function (results) {
 }
     
 
-elastic.search = async function  (searchQuery,index) {
+elastic.search = async function  (searchQuery,index,size=100) {
   const { body } = await client.search({
     index: index,
-    size:100,
+    size:size,
     body: {
       query: {
         wildcard: {
@@ -182,12 +182,12 @@ elastic.search = async function  (searchQuery,index) {
 }
 
 elastic.searchAll = function  (searchQuery) {
-  const indices = ['artists','albums','songs','playlists']
+  const indices = ['artist','album','song','playlist']
   return {
     indices,
     results:Promise.all(
       indices.map(
-        index=>elastic.search(searchQuery,index) 
+        index=>elastic.search(searchQuery,index+'s',3) 
       ) 
     )
   }

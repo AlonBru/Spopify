@@ -1,17 +1,29 @@
 import '../stylesheets/Search.css';
 import React, { useState } from 'react';
-import { Link, useHistory } from 'react-router-dom';
-import axios from 'axios';
-import SearchDisplay from './SearchDisplay';
+import { Link, useHistory, useLocation } from 'react-router-dom';
 
 function Search() {
   const [query, setQuery] = useState('');
-  const [open, setOpen] = useState(false);
+  const location  = useLocation()
+  
   const search = (e) => {
     const search = e.target.value;
+    const pattern = /^\/search\//
+    if(location.pathname.match(pattern)){
+      history.push(`${location.pathname}?query=${search}`)
+    }else{
+      history.push(`/search?query=${search}`)
+    }
     setQuery(search);
   };
-
+  const openSearch = () => {
+    const pattern = /^\/search\//
+    if(location.pathname.match(pattern)){
+      history.push(`${location.pathname}?query=${query}`)
+    }else{
+      history.push(`/search?query=${query}`)
+    }
+  }
   const history = useHistory();
   console.log();
   return (
@@ -32,43 +44,8 @@ function Search() {
         type="search"
         placeholder="🔍"
         onChange={search}
-        onFocus={() => {
-          history.push('/search')
-          // setOpen(true);
-        }}
+        onFocus={openSearch}
       />
-      <div
-        id="searchResults"
-        className={open ? 'open' : undefined}
-        onClick={(e) => {
-          console.log(e.target.tagName);
-          if (e.target.tagName !== 'DIV' && e.target.tagName !== 'H2') {
-            setOpen(false);
-          }
-        }}
-      >
-        {open ? (
-          <>
-            <div>
-              <h2>Songs</h2>
-              <SearchDisplay target="song" query={query} />
-            </div>
-            <div>
-              <h2>Albums</h2>
-              <SearchDisplay target="album" query={query} />
-            </div>
-            <div>
-              <h2>Artists</h2>
-              <SearchDisplay target="artist" query={query} />
-            </div>
-            <div>
-              <h2>Playlists</h2>
-              <SearchDisplay target="playlist" query={query} />
-            </div>
-          </>
-        )
-          : undefined}
-      </div>
     </div>
   );
 }

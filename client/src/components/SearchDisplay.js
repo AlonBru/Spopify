@@ -5,29 +5,20 @@ import {
 import axios from 'axios';
 import SearchCard from './SearchCard.js';
 
-function SearchDisplay({ target, query }) {
-  const [results, setResults] = useState([]);
-
-  useEffect(() => {
-    if (!query.length) {
-      setResults([]);
-      return;
-    }
-    axios.get(`/search/${target}/${query}`)
-      .then(({ data }) => {
-        console.log(data);
-        setResults(data);
-      })
-      .catch((e) => { console.error(e); });
-  }, [query]);
-  if (results.length === 0) { return <h3>Nothing to show..</h3>; }
+function SearchDisplay({ results, target }) {
+  
   return (
-    <div className="SearchDisplay">
-      {results
-        .slice()
-        .map((chart) => SearchCard({ ...chart, target }))}
+    <div>
+      <h2>{target+'s'}</h2>
+      <div className="SearchDisplay">
+        {results.length
+        ?results
+        .map((chart) => SearchCard({ ...chart, target }))
+        :<h3>Nothing to show..</h3>
+        }
+      </div>
     </div>
-  );
+    );
 }
 
 export default SearchDisplay;

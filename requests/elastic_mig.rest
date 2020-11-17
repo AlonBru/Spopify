@@ -35,7 +35,7 @@ Content-Type: application/json
    "released":"2001-01-01"
 }
 ###
-get http://localhost:8000/elastic/all?search=once
+get http://localhost:8000/elastic/artist?search=b
 ###
 get http://localhost:8000/api/search?search=bil
 ###

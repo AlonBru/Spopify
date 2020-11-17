@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import {
-  Link, Switch, Route, useRouteMatch, useParams,
+  Link
 } from 'react-router-dom';
 
 function SearchCard({
-  name, img, artist_name, album, id, target,
+  name, img, artist, album, id, target,
 }) {
   return (
     <div key={id} className="searchCard">
@@ -21,11 +21,11 @@ function SearchCard({
             : `${name.slice(0, 24).trim()}...`}
         </h4>
       </Link>
-      {artist_name
+      {artist
         ? (
           <p>
             by:
-            {' '+artist_name}
+            {' '+artist}
           </p>
         )
         : undefined}

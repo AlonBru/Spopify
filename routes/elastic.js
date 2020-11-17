@@ -82,7 +82,8 @@ router.get('/sql',(req,res) => {
 })
 
 router.get('/all',(req,res) => {
-  const {search:searchQuery} = req.query
+  const {search:searchQuery} = req.query|| 'b'
+  // console.log(searchQuery)
     try{
       let all =elastic.searchAll(searchQuery)
       all.results
@@ -99,11 +100,12 @@ router.get('/all',(req,res) => {
 })
 
 router.get('/:index',(req,res) => {
-  const {index} = req.params
+  const {index} = req.params 
+  console.log(index)
   const {search:searchQuery} = req.query
 
     try{
-      elastic.search(searchQuery,index)
+      elastic.search(searchQuery,index+'s')
       .then(results=>{  
         res.json(results)
       })
