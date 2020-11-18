@@ -12,12 +12,11 @@ import Loading from './Loading';
 
 function SongList({ list, type, id }) {
   const location = useLocation();
-  console.log(location);
 
   const url = match().ulr;
   if (!list) { return <Loading />; }
   return (
-    <div className="songlist">
+    <div className="z">
       <div className="song header">
         <span />
         <span>#</span>

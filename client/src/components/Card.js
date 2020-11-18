@@ -15,10 +15,12 @@ function Card({
             : ''}`}
       >
         <img className={`${target}Img`} src={img || cover_img} />
-        <h3>
-          {name.length < 30
-            ? name
-            : `${name.slice(0, 29).trim()}...`}
+        <h3 className={`${name.length > 10?'long':''}`}>
+          {
+            name
+            }
+            {/* name.length < 30?  */}
+            {/* : `${name.slice(0, 23).trim()}...` */}
         </h3>
       </Link>
       {artist

@@ -8,7 +8,6 @@ function AddAlbum({ sendData, sendStatus }) {
   };
   const addData = ({ name, value }) => {
     dataToAdd[name] = value;
-    console.log(dataToAdd);
   };
   const submitChecks = (e) => {
     e.preventDefault();

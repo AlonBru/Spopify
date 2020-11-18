@@ -1,7 +1,7 @@
 /* topbar */
 #topbar{
     z-index:3;
-    left:20%;
+    /* left:20%; */
     position: fixed;
     width: 100%;
     background-color: #111;

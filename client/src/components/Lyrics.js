@@ -17,7 +17,7 @@ function Lyrics({ lyrics }) {
         }
       >
         {/* <button className="close" onClick={() => { setOpen(false); }}>close</button> */}
-        <p>
+        <div>
         <button
          className="lyricsButton"
          onClick={() => { setOpen(!open); }}
@@ -28,7 +28,7 @@ function Lyrics({ lyrics }) {
           <p>to close click "Lyrics"</p>
           :
           {`\n${lyrics}`}
-        </p>
+        </div>
       </div>
     </span>
   );

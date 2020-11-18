@@ -34,7 +34,8 @@ main::-webkit-scrollbar{
     display: flex;
     flex-direction: column;
     /* justify-content: space-around; */
-    width:100%;
+    width:20%;
+    max-width: 125px;
     overflow: hidden;
 }
 #logo{
@@ -46,11 +47,12 @@ main::-webkit-scrollbar{
     margin-left:10px;
 }
 #app{
-    display: grid;
-    grid-template-columns: 20% 1fr;
+    /* display: grid;
+    grid-template-columns: % 1fr;
     grid-template-areas: 
     "nav main"
-    ;
+    ; */
+    display: flex;
 }
 .checker{
     transition: .7s;
@@ -130,6 +132,9 @@ img.artist{
 }
 .success{
     background-color: rgb(107, 168, 105);
+}
+.already-there{
+    background-color: rgb(216, 42, 42)
 }
 .likeButton{
     transition:.2s;

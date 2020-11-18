@@ -6,23 +6,34 @@ function AddToPlaylist({ song }) {
   const [playlists, setPlaylists] = useState([]);
   const [status, setStatus] = useState();
   const getPlaylists = () => {
-    axios.get('/playlist')
+    axios.get('/api/playlist/1')
       .then(({ data }) => {
+        console.log(data)
         setPlaylists(data);
       })
       .catch((err) => { console.error(err); });
   };
   const addSong = (song, playlist) => {
-    axios.post(`/songToPlaylist?song=${song}&playlist=${playlist}`)
-      .then(({ data }) => {
-        setStatus(data);
-        setTimeout(() => {
-          setStatus();
-          setMenuOpen(false);
-        }, 3000);
+    const clearMessage = ()=>{
+     setTimeout(() => {
+        setStatus();
+        setMenuOpen(false)
+      },3000)  
+    }
+    axios.post(`/api/songToPlaylist?song=${song}&playlist=${playlist}`)
+      .then((res) => {
+        console.log(res)
+        setStatus(res.data);
+        clearMessage()
       })
-      .catch(({ data }) => setStatus(data));
-  };
+      .catch((error) => {
+      if(error.response.status===400){
+        setStatus(error.response.data)
+        return clearMessage()
+      }
+      console.error(error)
+      });
+  };//TODO: ensure add to playlist works
   return (
     <span style={{ position: 'relative' }}>
       <button
@@ -41,15 +52,16 @@ function AddToPlaylist({ song }) {
       >
         <span>choose playlist:</span>
         {
-          status
-                    || playlists.map((list) => (
-                      <button
-                        key={list.playlist_id}
-                        onClick={() => { addSong(song, list.playlist_id); }}
-                      >
-                        {list.name}
-                      </button>
-                    ))
+          status?
+          status+'!'
+          : playlists.map((list) => (
+            <button
+              key={list.playlist_id}
+              onClick={() => { addSong(song, list.playlist_id); }}
+            >
+              {list.name}
+            </button>
+          ))
         }
         <button onClick={() => { setMenuOpen(false); }}>close</button>
       </div>

@@ -22,17 +22,9 @@ const query = (sql,data) => {
   });
 };
 
-// const getById = require('../queries/getById')
-// const getAll = require('../queries/getAll')
-// const getTop = require('../queries/getTop')
-// const getByArtist = require('../queries/getByArtist')
-// const search = require('../queries/search')
-const Like = require('../queries/Like')
-// const getByAlbum = require('../queries/getByAlbum')
-// const getByPlaylist = require('../queries/getByPlaylist');
-const elastic = require('./elastic');
 
 const db = {}
+
 //Elastic
 const elasticQuery = {
   artist: `SELECT
@@ -47,7 +39,7 @@ const elasticQuery = {
   `,
   song : `SELECT
   s.song_id as id, s.name,
-  cover_img as img,
+  cover_img as img, al.album_id as album,
   ar.name AS artist
   FROM songs AS s
   Join artists AS ar
@@ -82,11 +74,10 @@ db.getSearchData = {
 db.search = {
   all: function (search) {
     return Promise.all(
-      this.song(),
-      this.album(),
-      this.artist(),
-      this.playlist()
-      
+      [this.song(search),
+      this.album(search),
+      this.artist(search),
+      this.playlist(search)]
     )
   },
   song: (search) => {
@@ -209,16 +200,6 @@ db.findItem = {
   }
 }
 
-// db.addToPlaylist = (song,playlist) => {
-//     console.log(song,playlist)
-//     return query(
-//         `
-//         INSERT INTO songs_by_playlist
-//         (song_id,
-//         playlist_id)
-//         VALUES
-//         (?,?);
-//         `)
 
 //GET
 db.getById ={
@@ -287,6 +268,55 @@ db.getById ={
     AS an
     WHERE p.playlist_id = '${id}'
       Group BY p.playlist_id
+    `
+    return query(sql)
+  }
+}
+db.getAll ={
+  artist : () => {
+    const sql =`SELECT 
+      ar.*, SUM(i.play_count) AS play_count
+      FROM artists AS ar
+    LEFT JOIN songs AS s
+      ON s.artist = ar.artist_id
+    LEFT JOIN interactions as i
+      on s.song_id = i.song_id
+    GROUP BY artist_id`
+
+    return query(sql)
+  },
+  album : () => {
+    const sql = `SELECT al.album_id, al.name, al.cover_img, al.released,
+    ar.name as artist, ar.artist_id,
+    SUM(TIME_TO_SEC(s.length)) AS total_length
+    FROM albums AS al
+    Join artists AS ar
+    on al.artist = ar.artist_id
+    JOIN songs AS s
+    on s.album = al.album_id;
+    `
+    return query(sql)
+  },
+  song : () => {
+    const sql =`SELECT
+      s.*, SUM(i.play_count) AS play_count,
+      al.cover_img AS img, al.name AS album_name,
+      ar.name AS artist_name
+      FROM songs AS s
+    LEFT JOIN interactions as i
+      on s.song_id = i.song_id AND user_id=1
+    LEFT JOIN albums AS al
+      ON al.album_id = s.album
+    JOIN artists  ar
+      ON ar.artist_id = s.artist
+    GROUP BY s.song_id
+    `
+    return query(sql)
+  },
+  playlist : () => {
+    const sql =`SELECT 
+      p.*
+    FROM playlists AS p
     `
     return query(sql)
   }
@@ -450,6 +480,17 @@ db.addNew =(index,body) => {
       [body]
       ); 
 }
+db.addToPlaylist = (song,playlist) => {
+  const sql = `INSERT INTO songs_by_playlist
+    (song_id, playlist_id)
+  VALUES
+    (?,?);
+  `
+  return query(
+    sql,
+    [song,playlist]  
+  )
+}
 
 //PUT
 db.updateById = (target,id,body) => {    // receives an array of strings ['column=value'] 
@@ -459,6 +500,25 @@ db.updateById = (target,id,body) => {    // receives an array of strings ['colum
   \`${ target+'s' }\` SET ${changes} 
   WHERE ${target}_id='${id}' `
   return query(sql)
+}
+
+db.like = {
+  song: (id,data) => {
+   const sql = `INSERT
+      INTO interactions 
+    SET
+      user_id=1, song_id='${id}',play_count=0, ?
+      ON DUPLICATE KEY UPDATE
+    ?
+    `
+    return query(sql,data)
+  },
+  album: (id,data) => {
+  // unimplemented
+  },
+  playlist:(id,data) => {
+    // unimplemented
+  }
 }
 
 //DELETE

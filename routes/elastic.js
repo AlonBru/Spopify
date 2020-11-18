@@ -1,6 +1,6 @@
 const router = require('express').Router()
 const elastic = require('../helpers/elastic');
-const {getSearchData,findItem, search} = require('../helpers/queries');
+const {getSearchData,findItem} = require('../helpers/queries');
 // POST
 router.post('/migrate/artists',(req,res)=>{
   getSearchData.artists()
@@ -94,8 +94,12 @@ router.get('/all',(req,res) => {
         )
         res.json(searchResults)
       })
+      .catch(()=>{
+        res.redirect('../../api/search/all?search='+searchQuery)
+
+      })
     }catch(error){
-      console.error(error)
+      console.error(error);
     }
 })
 
@@ -108,6 +112,9 @@ router.get('/:index',(req,res) => {
       elastic.search(searchQuery,index+'s')
       .then(results=>{  
         res.json(results)
+      })
+      .catch(()=>{
+        res.redirect(`../../api/search/${index}?search=${searchQuery}`)
       })
     }catch(error){
       console.error(error)
