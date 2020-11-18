@@ -24,7 +24,7 @@ function SearchDisplay({ results, target }) {
         :<h3>Nothing to show..</h3>
         }
       </div>
-      {!params&&results.length>=3
+      {!params&&results.length>=5
       ?<Link className='onlyThis' to={`/search/${target}${location.search}`}>
         {`~ more in ${target}s ~`}
       </Link>

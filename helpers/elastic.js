@@ -187,7 +187,7 @@ elastic.searchAll = function  (searchQuery) {
     indices,
     results:Promise.all(
       indices.map(
-        index=>elastic.search(searchQuery,index+'s',3) 
+        index=>elastic.search(searchQuery,index+'s',6) 
       ) 
     )
   }
