@@ -1,4 +1,5 @@
 #songpage{
+  position: relative;
 }
 #songPage #details{
     grid-area: details;
@@ -61,27 +62,29 @@
     border: 0;
     background-color: transparent;
     font-size: 1em;    
+    padding: 0;
 }
 .lyricsButton:hover{
     text-decoration: underline rgb(84, 153, 199);;
 }
-.lyrics{
-    padding: 3px;
-    white-space: pre;
-    z-index: 2;
-    top:5vh;
-    left:120px;
-    width:fit-content;
-    height:80vh;
-    position: fixed;
-    overflow: auto;
-    background-color: #1a1a1a;
-
+.lyrics{ 
+  padding: 3px;
+  white-space: pre;
+  z-index: 2;
+  top:5vh;
+  left:120px;
+  width:fit-content;
+  max-width:100%;
+  height:20vh;
+  /* position: fixed; */
+  overflow-y: scroll;
+    
 }
-.lyrics p{
+  .lyrics p{
+    z-index: 6;
     padding:3px;
 }
 .lyrics .close{
- position:fixed;
- right:17vw;
+ /* position:fixed; */
+ right:15vw;
 }

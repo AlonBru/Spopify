@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function AddToPlaylist({ lyrics }) {
+function Lyrics({ lyrics }) {
   const [open, setOpen] = useState(false);
   return (
     <span style={{ position: 'relative' }}>
       <button
         className="lyricsButton"
-        onClick={() => { setOpen(true); }}
+        onClick={() => { setOpen(!open); }}
       >
         Lyrics
       </button>
@@ -16,9 +16,16 @@ function AddToPlaylist({ lyrics }) {
           (open ? 'lyrics' : 'hide')
         }
       >
-        <button className="close" onClick={() => { setOpen(false); }}>close</button>
+        {/* <button className="close" onClick={() => { setOpen(false); }}>close</button> */}
         <p>
-          <strong>Lyrics</strong>
+        <button
+         className="lyricsButton"
+         onClick={() => { setOpen(!open); }}
+        title='close'
+        >
+          Lyrics
+        </button>
+          <p>to close click "Lyrics"</p>
           :
           {`\n${lyrics}`}
         </p>
@@ -26,4 +33,4 @@ function AddToPlaylist({ lyrics }) {
     </span>
   );
 }
-export default AddToPlaylist;
+export default Lyrics;
