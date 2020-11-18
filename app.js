@@ -19,11 +19,11 @@ app.use(logger);
 app.get('/ping',(req,res) => {
   res.send({status:'success',message:'pong!'})
 })
-app.get('/', function (req, res) {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
 
 app.use('/elastic',elastic)
 app.use('/api',sql)
 
+app.get('/*', function (req, res) {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
 module.exports = app
