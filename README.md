@@ -23,7 +23,8 @@ Full Stack Project:
 ## interesting features:
 ![animations](photos/animations.gif)
 - Animations!
-- UseesDebounced search
+- Uses Spotify widgets, so if you are logged in on the browser yu can listen to the full songs.
+- Debounced search
 - Search using Elastic for faster results.
 - Local top charts
 - Discover fake artists! 
