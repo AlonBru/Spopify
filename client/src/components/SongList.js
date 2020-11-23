@@ -16,7 +16,7 @@ function SongList({ list, type, id }) {
   const url = match().ulr;
   if (!list) { return <Loading />; }
   return (
-    <div className="z">
+    <div className="songlist">
       <div className="song header">
         <span />
         <span>#</span>
@@ -60,4 +60,4 @@ function SongList({ list, type, id }) {
     </div>
   );
 }
-export default SongList;
+export default React.memo(SongList);

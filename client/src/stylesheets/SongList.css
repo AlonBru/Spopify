@@ -1,5 +1,6 @@
 .songlist{
-    min-width:500px;
+  min-width:500px;
+  margin-bottom: 6vh;
 }
 .song span{
     align-self: center;
@@ -17,11 +18,12 @@
     transition: 1.6s;
     display: grid;
     grid-template-columns:
-    20px 20px 25px 1fr 30px 60px 60px ;
+    0px 40px 40px 1fr 30px 60px 60px ;
+    /*# like title gap plus length plays*/
     column-gap: 10px;
     text-align: center;
     padding:2px 1px;
-    border-bottom: 1px solid #333;
+    border-bottom: 1px solid #222;
 }
 .song:hover{
     transition: .8s;
@@ -39,4 +41,7 @@
 }
 .song.header{
     pointer-events: none;
+}
+.songlist span {
+  /* color:red; */
 }

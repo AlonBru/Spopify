@@ -17,14 +17,17 @@
 
 #albumPage .cover{
     position: relative;
-    padding-top:5vh;
+    /* padding-top:5vh;
+    padding-bottom:5vh; */
+    padding:5vh;
     width:100%;
     background-color: #333;
     color:white;
     background-image: linear-gradient(to bottom,
     #333 , #111 );
     min-width: 500px;
-    display: grid;    
+    display: grid;
+    column-gap: 3%;
     grid-template-rows:1fr 1fr 1fr ;
     grid-template-columns: fit-content 1fr;
     grid-template-areas: 

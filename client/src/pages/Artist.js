@@ -64,10 +64,10 @@ function Artist({ match, location }) {
 
       </div>
       <div className="lists">
-        <h2>Top Songs</h2>
-        <SongList list={songs} type="Album" />
         <h2>Albums</h2>
         <AlbumList list={albums} />
+        <h2>Top Songs</h2>
+        <SongList list={songs} type="Album" />
       </div>
     </div>
   );

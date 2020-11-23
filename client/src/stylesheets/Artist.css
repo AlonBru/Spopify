@@ -31,13 +31,13 @@
 #artistPage .albumList{
     display: flex;
     flex-direction: row;
-}
-#artistPage .album{
+  }
+  #artistPage .album{
     width: 130px;
     margin:5px;
     display: flex;
     flex-direction: column;
-    height: 160px;
+    height: fit-content;
 }
 #artistPage .album img{
     width: 120px ;
