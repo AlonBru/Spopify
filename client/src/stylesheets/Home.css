@@ -1,0 +1,143 @@
+#home{
+  position: relative;
+  background-color: #111;
+  width:100%;
+  padding-left: 3%;
+  overflow: hidden;
+}
+#home h2{
+  color:#eee;
+  margin-top:2px;   
+  margin-bottom:2px;   
+
+  padding:3%;
+  margin-left:-3%;
+  border-top:#222 .5px solid;
+}
+header{
+  margin-left: -3%;
+  position: relative;
+  height: 30vh;
+  background-image: linear-gradient(to bottom,
+  #333 , #111 );
+  padding-left: 3%;
+}
+header h1{
+  position: absolute;
+  bottom:0px;
+  /* margin-left:-3%; */
+  font-size: xxx-large;
+}
+  #mini h1{
+  margin-left: 2%;
+  margin-top: 3%;
+  bottom:0;
+  /* border-bottom: #222 .5px solid; */
+  
+  }
+  #mini{
+    transition: .8s;
+    position: relative;
+    position:fixed;
+    top:-8vh;
+    margin-left:-3%;
+    z-index: 2;
+    color:white;
+    background-color: #1a1a1a;
+    background-image: linear-gradient(to bottom,#333, #111 );
+    width:100%;
+    height: 13vh;
+  }
+  #mini.show{
+    top:0vh;
+    transition: .4s;
+    padding-bottom: 10px;
+    /* border-bottom: 2px #333 solid; */
+  }
+  .carousel h2{
+    margin-left:5px;   
+  }
+  .carousel .charts{
+    width:100%;
+  display: flex;
+  grid-area: charts;
+  padding: 0 5px;
+  /* overflow-x: scroll; */
+}
+.carousel button{
+    transition:0.2s;
+    outline-style:none ;
+    position: relative;
+    bottom: 50px;
+    height: 50px;
+    width: 50px;
+    background-color: rgba(200,200,200,.3);
+    border-radius: 50%;
+    border:none;
+    background-image: url('../icons/play.svg');
+    background-size: 50px;
+}
+.carousel button:hover{
+    transition:0.2s;
+    box-shadow: 0 0 0 5px white;    
+} 
+.carousel button:disabled{
+    transition:0.2s;
+    box-shadow: none;    
+    background-image: url('../icons/play_disabled.svg');
+    
+} 
+.right{
+    grid-area: right;
+    justify-self:center ;
+}
+.left{
+    transform: scaleX(-1);
+    grid-area: left;
+    justify-self:center ;
+}
+.carousel .display{
+  display:grid;
+  grid-template-columns: 60px 1fr 60px;
+  grid-template-areas: "left charts right";
+  align-items: center;
+  padding: 0 5px;
+  width:90%
+}
+.card{
+    display: flex;
+    flex-direction: column;
+    width:19%;
+    min-height: 200px;
+    padding: 2px;
+    margin: .5%;
+}
+.card p{
+  margin:0;
+  align-self: flex-start;
+  margin-left:16px;
+}
+.card img{
+  height: auto;
+  width: 100%;
+}
+    .card h3{
+      margin:0;
+      margin-left:5px;
+      height: 50px;
+      height: 2.5em;
+    }
+    .long{
+      font-size: medium ;
+    }
+    .long:after{
+      height: .5em;
+
+    }
+.card a{
+  width: 100%;
+  overflow: hidden;
+}
+.artistImg{
+  border-radius:50%;
+}

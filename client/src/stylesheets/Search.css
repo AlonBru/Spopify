@@ -1,0 +1,102 @@
+/* topbar */
+#topbar{
+    z-index:3;
+    /* left:20%; */
+    position: fixed;
+    width: 100%;
+    background-color: #111;
+    height: fit-content;
+}
+#topbar button{
+
+    background-color: transparent;
+    outline: none;
+    background-color: none;
+    border:none;
+    color:white;
+    font-weight: 800;
+    font-size: large;
+    margin: 0 2px 0 2px;
+    cursor: pointer;
+}
+#topbar button:hover{
+  color: rgb(84, 153, 199);
+}
+#searchbar{
+    transition:.3s;
+    border-radius:5%/50%;
+    padding: 0 6px;
+    width:180px;
+    outline: 0;
+    height: 1.5em;
+}
+#searchbar:focus{
+    transition:.5s;
+    width:200px;
+    height: 2em;
+    border:rgb(84, 153, 199) solid 3px;
+}
+/* page */
+
+.search{
+  padding:10px;
+  width:95%;
+}
+
+.searchButtons{
+  padding: 3px;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+}
+
+
+.SearchDisplay{
+  position: relative;
+  width: 100%;
+  height:fit-content;
+  display:flex;
+  flex-direction: column;
+  background-color: rgba(49, 48, 48,.3);
+  /* border:1px #333 solid; */
+  height:fit-content;
+  display: flex;
+  padding: 5px;
+  align-items:center ;
+  margin:10px 0;
+  
+}
+.SearchDisplay>h2{
+  margin: 5px 0;
+}
+
+.SearchDisplay>div{
+  width: 100%;
+  display:flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content:center ;
+  height: fit-content;
+  
+}
+
+.searchCard{
+  height: fit-content;
+  min-height:150px;
+  width:120px;
+  margin:6px;
+}
+
+.searchCard img{
+    height:120px;
+    width:120px;
+}
+.SearchDisplay h4{
+    margin: 2px 0 0 0;
+    padding: 0 2px ;
+}
+.SearchDisplay p{
+    margin-top:2px;
+    font-size:15px;
+    padding: 0 4px;
+}

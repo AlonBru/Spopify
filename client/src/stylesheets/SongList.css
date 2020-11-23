@@ -1,0 +1,47 @@
+.songlist{
+  min-width:500px;
+  margin-bottom: 6vh;
+}
+.song span{
+    align-self: center;
+}
+.song img{
+    height:30px;
+} 
+.like{
+    align-self: center;
+    padding:0;
+    height:20px;
+    
+}
+.song{
+    transition: 1.6s;
+    display: grid;
+    grid-template-columns:
+    0px 40px 40px 1fr 30px 60px 60px ;
+    /*# like title gap plus length plays*/
+    column-gap: 10px;
+    text-align: center;
+    padding:2px 1px;
+    border-bottom: 1px solid #222;
+}
+.song:hover{
+    transition: .8s;
+    background-color: rgb(20, 100, 220);
+}
+.selected-song div{
+    transition: .2s;
+    border-left:4px rgb(20, 100, 220) solid;
+    
+}
+.selected-song div:hover{
+    transition: .4s;
+    border-left:4px white solid;
+    
+}
+.song.header{
+    pointer-events: none;
+}
+.songlist span {
+  /* color:red; */
+}

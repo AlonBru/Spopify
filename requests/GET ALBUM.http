@@ -1,28 +1,30 @@
-GET http://localhost:8000/album/bopo
-Content-Type: application/json
+GET http://localhost:8000/song?page=-2
 
-[
-    "https://www.youtube.com/watch?v=oHg5SJYRHA0&ab_channel=cotter548", 
-        1, 
-        1, 
-        "some song", 
-        "00:03:00", 
-        1, 
-        "somewords", 
-        "2020-11-12", 
-        "2020-11-12", 
-        "", 
-        13 
-]
+# Content-Type: application/json
 
-# youtube_link VARCHAR
-#album INT
-#artist INT
-#title VARCHAR
-#length TIME
-#track_number INT
-#lyrics TEXT
-# released DATE
-#uploaded_at DATE
-#genres SET
-#likes_number INT
+
+# [
+#     "https://www.youtube.com/watch?v=oHg5SJYRHA0&ab_channel=cotter548", 
+#         1, 
+#         1, 
+#         "some song", 
+#         "00:03:00", 
+#         1, 
+#         "somewords", 
+#         "2020-11-12", 
+#         "2020-11-12", 
+#         "", 
+#         13 
+# ]
+
+# # youtube_link VARCHAR
+# #album INT
+# #artist INT
+# #title VARCHAR
+# #length TIME
+# #track_number INT
+# #lyrics TEXT
+# # released DATE
+# #uploaded_at DATE
+# #genres SET
+# #likes_number INT

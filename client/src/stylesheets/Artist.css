@@ -1,0 +1,87 @@
+#artistPage h1{
+    font-size:80px;
+    margin-bottom: 10px;
+}
+#artistPage .cover{
+    height: 40vh;
+    width:100%;
+    min-width: 500px;
+    background-size:100%;
+    background-position: center;
+    background-color: #333;
+    color:white;
+    align-content: center;
+    text-align: start;
+    display: flex;
+    flex-direction: column;
+}
+
+#artistPage .follow{
+    cursor: pointer;
+    width:60px;
+    border-radius: 20%/50%;
+    border:0;
+}
+#artistPage .follow:hover{
+    background-color: white;
+    width:60px;
+    border-radius: 20%/50%;
+    border:0;
+}
+#artistPage .albumList{
+    display: flex;
+    flex-direction: row;
+  }
+  #artistPage .album{
+    width: 130px;
+    margin:5px;
+    display: flex;
+    flex-direction: column;
+    height: fit-content;
+}
+#artistPage .album img{
+    width: 120px ;
+    padding:1px;
+}
+#artistPage .album span{
+    padding:0 4px;
+}
+#artistPage .pageNav .selected{
+    border-radius:0; 
+}
+#artistPage .longname{
+    font-size: 70px;
+}
+#artistPage .longName.cover h4{
+    grid-area: artist ;
+}
+#artistPage .longName.cover span{
+    grid-area: details ;
+}
+#artistPage .longName.cover img{
+    justify-self: center;
+    align-self: center;
+    grid-area: img;
+    height:180px;
+    width:180px;
+}
+
+#artistPage .longName{
+    position: relative;
+    padding-top:5vh;
+    width:100%;
+    background-color: #333;
+    color:white;
+    background-image: linear-gradient(to bottom,
+    #444 , #222 );
+    min-width: 500px;
+    display: grid;    
+    grid-template-rows:1fr 1fr 1fr ;
+    grid-template-columns: fit-content 1fr;
+    grid-template-areas:
+    "img name"
+    "img artist"
+    "img details";
+    background-image: linear-gradient(to bottom,
+    #333 , #111 );
+}
