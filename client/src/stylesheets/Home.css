@@ -32,11 +32,13 @@ header h1{
     position: relative;
     position:fixed;
     top:0vh;
+    margin-left:-3%;
     z-index: 2;
   }
   #mini h1{
-    margin:30px 0 0 10px;
+    margin-left: 1%;
     bottom:0;
+    
   }
   #mini.show{
     transition: .4s;
@@ -97,10 +99,6 @@ header h1{
   padding: 0 5px;
   width:90%
 }
-.carousel{
-  /* margin-left: 5%;   */
-}
-
 .card{
     display: flex;
     flex-direction: column;
